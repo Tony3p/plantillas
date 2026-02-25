@@ -388,7 +388,7 @@ function LandingPage({ categories, items }) {
                           variant="subtitle2"
                           sx={{ color: '#e5e7eb', fontWeight: 800, lineHeight: 1.1, marginRight:0, alignSelf:'center' }}
                         >
-                          {`${formatUsd.format(item.priceUsd)} USD`}
+                          {`${formatUsd.format(item.priceUsd)} `}
                         </Typography>
                         <Typography
                           variant="caption"
