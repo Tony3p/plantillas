@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Routes, Route, Link as RouterLink } from 'react-router-dom'
+import { Routes, Route, Link as RouterLink, useLocation } from 'react-router-dom'
 import {
   AppBar,
   Box,
@@ -12,7 +12,6 @@ import {
   Stack,
 } from '@mui/material'
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag'
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import LandingPage from './pages/LandingPage.jsx'
 import AdminPage from './pages/AdminPage.jsx'
 
@@ -81,8 +80,24 @@ const initialItems = [
 ]
 
 function App() {
+  const location = useLocation()
   const [categories, setCategories] = useState(initialCategories)
   const [items, setItems] = useState(initialItems)
+
+  const handleScrollToSection = (sectionId) => {
+    if (location.pathname !== '/') return
+    const target = document.getElementById(sectionId)
+    if (!target) return
+
+    const appBarOffset = 80
+    const rect = target.getBoundingClientRect()
+    const offsetTop = rect.top + window.scrollY - appBarOffset
+
+    window.scrollTo({
+      top: offsetTop,
+      behavior: 'smooth',
+    })
+  }
 
   const addCategory = (category) => {
     setCategories((prev) => [...prev, category])
@@ -167,21 +182,24 @@ function App() {
           <Stack direction="row" spacing={1.5} alignItems="center">
             <Button
               color="inherit"
-              component={RouterLink}
-              to="/"
+              onClick={() => handleScrollToSection('catalog-section')}
               sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
             >
               Catálogo
             </Button>
             <Button
-              color="secondary"
-              variant="contained"
-              startIcon={<AdminPanelSettingsIcon />}
-              component={RouterLink}
-              to="/admin"
-              size="small"
+              color="inherit"
+              onClick={() => handleScrollToSection('about-section')}
+              sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
             >
-              Admin
+              Quiénes somos
+            </Button>
+            <Button
+              color="inherit"
+              onClick={() => handleScrollToSection('faq-section')}
+              sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
+            >
+              Preguntas frecuentes
             </Button>
           </Stack>
         </Toolbar>
