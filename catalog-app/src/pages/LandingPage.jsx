@@ -14,11 +14,41 @@ import {
   Button,
   Stack,
   Divider,
+  Dialog,
+  DialogContent,
+  IconButton,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import CloseIcon from '@mui/icons-material/Close'
+import InstagramIcon from '@mui/icons-material/Instagram'
+import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 
 function LandingPage({ categories, items }) {
   const [selectedCategory, setSelectedCategory] = useState('all')
+  const [openItem, setOpenItem] = useState(null)
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
+
+  const formatArs = useMemo(
+    () =>
+      new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: 'ARS',
+        maximumFractionDigits: 0,
+      }),
+    []
+  )
+  const formatUsd = useMemo(
+    () =>
+      new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }),
+    []
+  )
 
   const filteredItems = useMemo(() => {
     if (selectedCategory === 'all') return items
@@ -30,15 +60,46 @@ function LandingPage({ categories, items }) {
       ? null
       : categories.find((c) => c.id === selectedCategory)
 
+  const handleOpenItem = (item) => {
+    setOpenItem(item)
+  }
+
+  const handleCloseItem = () => {
+    setOpenItem(null)
+  }
+
+  const dummyVideoUrl =
+    openItem?.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+
+  const handleWhatsAppCompra = () => {
+    if (!openItem) return
+    const text = encodeURIComponent(
+      `Hola! Me interesa la plantilla "${openItem.name}" que vi en tuplantillaperfecta. Precio: ${formatUsd.format(
+        openItem.priceUsd
+      )} USD / ${formatArs.format(openItem.priceArs)} ARS.`
+    )
+    window.open(`https://wa.me/5491164799746?text=${text}`, '_blank')
+  }
+
   return (
     <Box>
       <Grid
         container
-        spacing={4}
+        spacing={{ xs: 3, md: 5 }}
         alignItems="center"
-        sx={{ mb: { xs: 4, md: 8 } }}
+        sx={{
+          mb: { xs: 5, md: 8 },
+        }}
       >
-        <Grid item xs={12} md={6}>
+        <Grid
+          item
+          xs={12}
+          md={6}
+          sx={{
+            display: 'flex',
+            justifyContent: { xs: 'center', md: 'flex-start' },
+          }}
+        >
           <Stack spacing={2.5}>
             <Chip
               label="Plantillas de hojas de cálculo"
@@ -104,28 +165,39 @@ function LandingPage({ categories, items }) {
             </Stack>
           </Stack>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid
+          item
+          xs={12}
+          md={6}
+          sx={{
+            mt: { xs: 1, md: 0 },
+            display: { xs: 'none', md: 'flex' },
+            justifyContent: { xs: 'center', md: 'flex-end' },
+          }}
+        >
           <Box
             sx={{
               position: 'relative',
-              borderRadius: 4,
+              borderRadius: { xs: 3, md: 4 },
               overflow: 'hidden',
               background:
                 'radial-gradient(circle at 0% 0%, #4f46e5 0, transparent 55%), radial-gradient(circle at 100% 100%, #f97316 0, transparent 55%)',
-              p: 1.5,
+              p: { xs: 1.2, md: 1.5 },
               boxShadow:
                 '0 28px 80px rgba(15, 23, 42, 0.55), 0 0 0 1px rgba(148, 163, 184, 0.35)',
+              width: { xs: '100%', sm: '90%', md: '100%' },
+              maxWidth: 440,
             }}
           >
             <Box
               sx={{
-                borderRadius: 3,
+                borderRadius: { xs: 2.5, md: 3 },
                 bgcolor: 'background.paper',
-                p: 2,
+                p: { xs: 1.6, md: 2 },
                 display: 'grid',
                 gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
                 gap: 0.75,
-                minHeight: 260,
+                minHeight: { xs: 210, sm: 240, md: 260 },
               }}
             >
               {Array.from({ length: 18 }).map((_, index) => (
@@ -230,13 +302,21 @@ function LandingPage({ categories, items }) {
 
         <Grid container spacing={3}>
           {filteredItems.map((item) => (
-            <Grid key={item.id} item xs={12} sm={6} md={4}>
+            <Grid key={item.id} item xs={16} sm={2} md={2} lg={3}>
               <Card
+                onClick={() => handleOpenItem(item)}
                 sx={{
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
                   bgcolor: 'background.paper',
+                  cursor: 'pointer',
+                  transition: 'transform 180ms ease, box-shadow 180ms ease',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow:
+                      '0 20px 45px rgba(15, 23, 42, 0.28), 0 0 0 1px rgba(148, 163, 184, 0.5)',
+                  },
                 }}
               >
                 <Box sx={{ position: 'relative' }}>
@@ -245,7 +325,7 @@ function LandingPage({ categories, items }) {
                     image={item.image}
                     alt={item.name}
                     sx={{
-                      height: 220,
+                      height: 150,
                       objectFit: 'cover',
                       filter: 'saturate(1.05)',
                     }}
@@ -295,18 +375,30 @@ function LandingPage({ categories, items }) {
                     <Box
                       sx={{
                         px: 1.5,
-                        py: 0.5,
+                        py: 0.8,
                         borderRadius: 999,
                         bgcolor: 'rgba(15,23,42,0.85)',
                         border: '1px solid rgba(148, 163, 184, 0.7)',
                       }}
                     >
-                      <Typography
-                        variant="subtitle2"
-                        sx={{ color: '#e5e7eb', fontWeight: 700 }}
-                      >
-                        {item.price.toFixed(0)}€
-                      </Typography>
+                      <Stack spacing={0} alignItems="flex-end">
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ color: '#e5e7eb', fontWeight: 800, lineHeight: 1.1 }}
+                        >
+                          {`${formatUsd.format(item.priceUsd)} USD`}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: 'rgba(229,231,235,0.92)',
+                            fontWeight: 700,
+                            lineHeight: 1.1,
+                          }}
+                        >
+                          {`${formatArs.format(item.priceArs)} ARS`}
+                        </Typography>
+                      </Stack>
                     </Box>
                   </Box>
                 </Box>
@@ -376,7 +468,7 @@ function LandingPage({ categories, items }) {
                     disableElevation
                     sx={{ px: 2.5 }}
                   >
-                    Comprar
+                    Ver detalles
                   </Button>
                 </CardActions>
               </Card>
@@ -629,6 +721,256 @@ function LandingPage({ categories, items }) {
           </Accordion>
         </Stack>
       </Box>
+
+      <Box
+        id="contact-section"
+        sx={{
+          mt: 5,
+          mb: 2,
+          p: { xs: 3, md: 4 },
+          borderRadius: 4,
+          bgcolor: 'rgba(15,23,42,0.03)',
+          border: '1px solid rgba(148, 163, 184, 0.35)',
+        }}
+      >
+        <Grid container spacing={3} alignItems="center">
+          <Grid item xs={12} md={7}>
+            <Stack spacing={1.5}>
+              <Typography variant="overline" sx={{ letterSpacing: 1.5 }}>
+                Contáctanos
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                ¿Tienes dudas o quieres una plantilla a medida?
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ color: 'text.secondary', maxWidth: 520 }}
+              >
+                Escríbenos por Instagram o WhatsApp y hablamos sobre lo que
+                necesitas. Respondemos de forma personal, sin bots.
+              </Typography>
+            </Stack>
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              justifyContent="flex-end"
+            >
+              <Button
+                component="a"
+                href={`https://ig.me/m/tuplantillaperfecta?text=${encodeURIComponent(
+                  'Hola! Me gustaría saber más sobre tus plantillas de hojas de cálculo.'
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="contained"
+                color="secondary"
+                startIcon={<InstagramIcon />}
+                disableElevation
+                sx={{ flex: 1 }}
+              >
+                Instagram
+              </Button>
+              <Button
+                component="a"
+                href={`https://wa.me/5491164799746?text=${encodeURIComponent(
+                  'Hola! Me gustaría saber más sobre tus plantillas de hojas de cálculo.'
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="outlined"
+                color="primary"
+                startIcon={<WhatsAppIcon />}
+                sx={{ flex: 1 }}
+              >
+                WhatsApp
+              </Button>
+            </Stack>
+          </Grid>
+        </Grid>
+      </Box>
+
+      <Dialog
+        open={Boolean(openItem)}
+        onClose={handleCloseItem}
+        fullWidth
+        maxWidth="md"
+        fullScreen={isSmallScreen}
+        PaperProps={{
+          sx: {
+            borderRadius: { xs: 0, md: 4 },
+            overflow: 'hidden',
+          },
+        }}
+      >
+        {openItem && (
+          <DialogContent
+            sx={{
+              p: { xs: 2, md: 3 },
+              pb: { xs: 2.5, md: 3 },
+              position: 'relative',
+            }}
+          >
+            <IconButton
+              onClick={handleCloseItem}
+              sx={{
+                position: 'absolute',
+                top: 12,
+                right: 12,
+                zIndex: 2,
+              }}
+              aria-label="Cerrar"
+            >
+              <CloseIcon />
+            </IconButton>
+
+            <Grid
+              container
+              spacing={{ xs: 2, md: 3 }}
+              alignItems="stretch"
+            >
+              <Grid item xs={12} md={5}>
+                <Box
+                  sx={{
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    boxShadow:
+                      '0 14px 40px rgba(15, 23, 42, 0.3), 0 0 0 1px rgba(148, 163, 184, 0.4)',
+                    height: '100%',
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    image={openItem.image}
+                    alt={openItem.name}
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      maxHeight: { xs: 260, md: 420 },
+                      objectFit: 'cover',
+                    }}
+                  />
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={7}>
+                <Stack spacing={2.25} sx={{ height: '100%' }}>
+                  <Stack spacing={0.75}>
+                    <Typography variant="overline" sx={{ letterSpacing: 1.4 }}>
+                      Plantilla · Hoja de cálculo
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 700,
+                        letterSpacing: -0.2,
+                      }}
+                    >
+                      {openItem.name}
+                    </Typography>
+                  </Stack>
+
+                  <Stack spacing={1}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {openItem.highlight}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: 'text.secondary', fontSize: 13 }}
+                    >
+                      {openItem.accent}
+                    </Typography>
+                  </Stack>
+
+                  <Box
+                    sx={{
+                      alignSelf: 'flex-start',
+                      px: 1.6,
+                      py: 0.9,
+                      borderRadius: 999,
+                      bgcolor: 'rgba(15,23,42,0.03)',
+                      border: '1px solid rgba(148, 163, 184, 0.55)',
+                    }}
+                  >
+                    <Stack spacing={0.2}>
+                      <Typography
+                        variant="subtitle2"
+                        sx={{ fontWeight: 700 }}
+                      >
+                        {`${formatUsd.format(openItem.priceUsd)} USD`}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.secondary', fontWeight: 600 }}
+                      >
+                        {`${formatArs.format(openItem.priceArs)} ARS`}
+                      </Typography>
+                    </Stack>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      borderRadius: 3,
+                      overflow: 'hidden',
+                      boxShadow:
+                        '0 12px 35px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(148, 163, 184, 0.4)',
+                      bgcolor: 'background.paper',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        width: '100%',
+                        pt: '56.25%',
+                      }}
+                    >
+                      <Box
+                        component="iframe"
+                        src={dummyVideoUrl}
+                        title="Vista previa de la plantilla"
+                        sx={{
+                          border: 0,
+                          position: 'absolute',
+                          inset: 0,
+                          width: '100%',
+                          height: '100%',
+                        }}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </Box>
+                  </Box>
+
+                  <Stack
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={1.5}
+                    sx={{ mt: 'auto' }}
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disableElevation
+                      sx={{ flex: 1, py: 1.1 }}
+                      onClick={handleWhatsAppCompra}
+                    >
+                      Comprar por WhatsApp
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={handleCloseItem}
+                      sx={{ flex: 1, py: 1.1 }}
+                    >
+                      Seguir viendo
+                    </Button>
+                  </Stack>
+                </Stack>
+              </Grid>
+            </Grid>
+          </DialogContent>
+        )}
+      </Dialog>
     </Box>
   )
 }

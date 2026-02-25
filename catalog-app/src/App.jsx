@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Routes, Route, Link as RouterLink, useLocation } from 'react-router-dom'
 import {
   AppBar,
@@ -14,8 +14,15 @@ import {
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag'
 import LandingPage from './pages/LandingPage.jsx'
 import AdminPage from './pages/AdminPage.jsx'
+import {
+  fetchDb,
+  createCategory,
+  deleteCategory as apiDeleteCategory,
+  createItem,
+  deleteItem as apiDeleteItem,
+} from './api.js'
 
-const initialCategories = [
+const seedCategories = [
   {
     id: 'finances',
     name: 'Finanzas',
@@ -36,53 +43,73 @@ const initialCategories = [
   },
 ]
 
-const initialItems = [
+const seedItems = [
   {
     id: 'sheet-001',
     name: 'Dashboard financiero mensual',
     categoryId: 'finances',
-    price: 19,
+    priceUsd: 19,
+    priceArs: 19900,
     image:
       'https://images.pexels.com/photos/669610/pexels-photo-669610.jpeg?auto=compress&cs=tinysrgb&w=1200',
     highlight: 'Ideal para freelancers y pequeños negocios',
     accent: 'Incluye gráficos listos para usar',
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
   },
   {
     id: 'sheet-002',
     name: 'Control de gastos personales',
     categoryId: 'personal-expenses',
-    price: 12,
+    priceUsd: 12,
+    priceArs: 12900,
     image:
       'https://images.pexels.com/photos/4386324/pexels-photo-4386324.jpeg?auto=compress&cs=tinysrgb&w=1200',
     highlight: 'Perfecto para entender a dónde va tu dinero',
     accent: 'Alertas visuales por categoría',
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
   },
   {
     id: 'sheet-003',
     name: 'Planificador semanal premium',
     categoryId: 'planning',
-    price: 9,
+    priceUsd: 9,
+    priceArs: 9900,
     image:
       'https://images.pexels.com/photos/4144222/pexels-photo-4144222.jpeg?auto=compress&cs=tinysrgb&w=1200',
     highlight: 'Diseñado para creadores y estudiantes',
     accent: 'Vista limpia y minimalista',
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
   },
   {
     id: 'sheet-004',
     name: 'Control de suscripciones',
     categoryId: 'personal-expenses',
-    price: 8,
+    priceUsd: 8,
+    priceArs: 8900,
     image:
       'https://images.pexels.com/photos/6303684/pexels-photo-6303684.jpeg?auto=compress&cs=tinysrgb&w=1200',
     highlight: 'Evita pagos sorpresa cada mes',
     accent: 'Recordatorios de renovación',
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
   },
 ]
 
 function App() {
   const location = useLocation()
-  const [categories, setCategories] = useState(initialCategories)
-  const [items, setItems] = useState(initialItems)
+  const [categories, setCategories] = useState(seedCategories)
+  const [items, setItems] = useState(seedItems)
+
+  const refreshDb = async () => {
+    const db = await fetchDb()
+    setCategories(db.categories || [])
+    setItems(db.items || [])
+  }
+
+  useEffect(() => {
+    refreshDb().catch(() => {
+      // If the API isn't running yet, keep seed data.
+    })
+  }, [])
 
   const handleScrollToSection = (sectionId) => {
     if (location.pathname !== '/') return
@@ -99,21 +126,24 @@ function App() {
     })
   }
 
-  const addCategory = (category) => {
-    setCategories((prev) => [...prev, category])
+  const addCategory = async (category) => {
+    await createCategory(category)
+    await refreshDb()
   }
 
-  const deleteCategory = (id) => {
-    setCategories((prev) => prev.filter((c) => c.id !== id))
-    setItems((prev) => prev.filter((i) => i.categoryId !== id))
+  const deleteCategory = async (id) => {
+    await apiDeleteCategory(id)
+    await refreshDb()
   }
 
-  const addItem = (item) => {
-    setItems((prev) => [...prev, item])
+  const addItem = async (item) => {
+    await createItem(item)
+    await refreshDb()
   }
 
-  const deleteItem = (id) => {
-    setItems((prev) => prev.filter((i) => i.id !== id))
+  const deleteItem = async (id) => {
+    await apiDeleteItem(id)
+    await refreshDb()
   }
 
   const categoryStats = useMemo(
@@ -200,6 +230,13 @@ function App() {
               sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
             >
               Preguntas frecuentes
+            </Button>
+            <Button
+              color="inherit"
+              onClick={() => handleScrollToSection('contact-section')}
+              sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
+            >
+              Contáctanos
             </Button>
           </Stack>
         </Toolbar>

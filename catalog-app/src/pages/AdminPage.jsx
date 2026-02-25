@@ -40,13 +40,17 @@ function AdminPage({
   const [newCategoryName, setNewCategoryName] = useState('')
   const [newCategoryId, setNewCategoryId] = useState('')
   const [newCategoryDescription, setNewCategoryDescription] = useState('')
+  const [categoryError, setCategoryError] = useState('')
 
   const [newItemName, setNewItemName] = useState('')
   const [newItemCategoryId, setNewItemCategoryId] = useState('')
-  const [newItemPrice, setNewItemPrice] = useState('')
+  const [newItemPriceUsd, setNewItemPriceUsd] = useState('')
+  const [newItemPriceArs, setNewItemPriceArs] = useState('')
   const [newItemImage, setNewItemImage] = useState('')
+  const [newItemVideoUrl, setNewItemVideoUrl] = useState('')
   const [newItemHighlight, setNewItemHighlight] = useState('')
   const [newItemAccent, setNewItemAccent] = useState('')
+  const [itemError, setItemError] = useState('')
 
   const handleLoginSubmit = (event) => {
     event.preventDefault()
@@ -58,60 +62,83 @@ function AdminPage({
     }
   }
 
-  const handleCreateCategory = (event) => {
+  const handleCreateCategory = async (event) => {
     event.preventDefault()
-    if (!newCategoryId || !newCategoryName) return
+    if (!newCategoryId || !newCategoryName || !newCategoryDescription) return
+    setCategoryError('')
 
     const exists = categories.some(
       (cat) => cat.id.toLowerCase() === newCategoryId.toLowerCase()
     )
-    if (exists) return
+    if (exists) {
+      setCategoryError('Ya existe una categoría con ese ID.')
+      return
+    }
 
-    onAddCategory({
-      id: newCategoryId.trim(),
-      name: newCategoryName.trim(),
-      description: newCategoryDescription.trim(),
-      color: '#eff6ff',
-    })
+    try {
+      await onAddCategory({
+        id: newCategoryId.trim(),
+        name: newCategoryName.trim(),
+        description: newCategoryDescription.trim(),
+        color: '#eff6ff',
+      })
 
-    setNewCategoryId('')
-    setNewCategoryName('')
-    setNewCategoryDescription('')
+      setNewCategoryId('')
+      setNewCategoryName('')
+      setNewCategoryDescription('')
+    } catch (error) {
+      setCategoryError(error?.message || 'No se pudo crear la categoría.')
+    }
   }
 
-  const handleCreateItem = (event) => {
+  const handleCreateItem = async (event) => {
     event.preventDefault()
-    if (!newItemName || !newItemCategoryId || !newItemPrice) return
+    if (
+      !newItemName ||
+      !newItemCategoryId ||
+      !newItemPriceUsd ||
+      !newItemPriceArs ||
+      !newItemImage ||
+      !newItemVideoUrl ||
+      !newItemHighlight ||
+      !newItemAccent
+    )
+      return
+    setItemError('')
 
-    const numericPrice = Number(newItemPrice)
-    if (Number.isNaN(numericPrice) || numericPrice <= 0) return
+    const numericUsd = Number(newItemPriceUsd)
+    const numericArs = Number(newItemPriceArs)
+    if (Number.isNaN(numericUsd) || numericUsd <= 0) return
+    if (Number.isNaN(numericArs) || numericArs <= 0) return
 
     const idBase = newItemName.toLowerCase().replace(/\s+/g, '-')
     const uniqueSuffix = String(Date.now()).slice(-4)
     const newId = `${idBase}-${uniqueSuffix}`
 
-    onAddItem({
-      id: newId,
-      name: newItemName.trim(),
-      categoryId: newItemCategoryId,
-      price: numericPrice,
-      image:
-        newItemImage ||
-        'https://images.pexels.com/photos/669609/pexels-photo-669609.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      highlight:
-        newItemHighlight ||
-        'Descripción breve sobre para quién es esta plantilla.',
-      accent:
-        newItemAccent ||
-        'Añade un beneficio concreto o una característica destacada.',
-    })
+    try {
+      await onAddItem({
+        id: newId,
+        name: newItemName.trim(),
+        categoryId: newItemCategoryId,
+        priceUsd: numericUsd,
+        priceArs: numericArs,
+        image: newItemImage.trim(),
+        videoUrl: newItemVideoUrl.trim(),
+        highlight: newItemHighlight.trim(),
+        accent: newItemAccent.trim(),
+      })
 
-    setNewItemName('')
-    setNewItemCategoryId('')
-    setNewItemPrice('')
-    setNewItemImage('')
-    setNewItemHighlight('')
-    setNewItemAccent('')
+      setNewItemName('')
+      setNewItemCategoryId('')
+      setNewItemPriceUsd('')
+      setNewItemPriceArs('')
+      setNewItemImage('')
+      setNewItemVideoUrl('')
+      setNewItemHighlight('')
+      setNewItemAccent('')
+    } catch (error) {
+      setItemError(error?.message || 'No se pudo crear la plantilla.')
+    }
   }
 
   const categoryWithCounts = useMemo(
@@ -259,12 +286,14 @@ function AdminPage({
                     onChange={(event) => setNewCategoryId(event.target.value)}
                     helperText="Usa algo corto y sin espacios. Ej: finances"
                     fullWidth
+                    required
                   />
                   <TextField
                     label="Nombre visible"
                     value={newCategoryName}
                     onChange={(event) => setNewCategoryName(event.target.value)}
                     fullWidth
+                    required
                   />
                   <TextField
                     label="Descripción"
@@ -275,7 +304,13 @@ function AdminPage({
                     fullWidth
                     multiline
                     minRows={2}
+                    required
                   />
+                  {categoryError && (
+                    <Typography variant="body2" sx={{ color: 'error.main', mt: -1 }}>
+                      {categoryError}
+                    </Typography>
+                  )}
                   <Button
                     type="submit"
                     variant="contained"
@@ -298,8 +333,8 @@ function AdminPage({
                 variant="body2"
                 sx={{ mb: 2, color: 'text.secondary' }}
               >
-                Añade una nueva hoja al catálogo. Puedes dejar algunos campos en
-                blanco y completarlos más tarde.
+                Añade una nueva hoja al catálogo. Por ahora, todos los campos
+                del formulario son obligatorios.
               </Typography>
               <Box component="form" onSubmit={handleCreateItem}>
                 <Stack spacing={2.5}>
@@ -308,6 +343,7 @@ function AdminPage({
                     value={newItemName}
                     onChange={(event) => setNewItemName(event.target.value)}
                     fullWidth
+                    required
                   />
                   <TextField
                     select
@@ -317,6 +353,7 @@ function AdminPage({
                       setNewItemCategoryId(event.target.value)
                     }
                     fullWidth
+                    required
                   >
                     {categories.map((category) => (
                       <MenuItem key={category.id} value={category.id}>
@@ -325,25 +362,48 @@ function AdminPage({
                     ))}
                   </TextField>
                   <TextField
-                    label="Precio"
+                    label="Precio (USD)"
                     type="number"
-                    value={newItemPrice}
-                    onChange={(event) => setNewItemPrice(event.target.value)}
+                    value={newItemPriceUsd}
+                    onChange={(event) => setNewItemPriceUsd(event.target.value)}
                     fullWidth
+                    required
                     InputProps={{
                       startAdornment: (
-                        <InputAdornment position="start">€</InputAdornment>
+                        <InputAdornment position="start">US$</InputAdornment>
                       ),
                     }}
                   />
                   <TextField
-                    label="URL de imagen (opcional)"
+                    label="Precio (ARS)"
+                    type="number"
+                    value={newItemPriceArs}
+                    onChange={(event) => setNewItemPriceArs(event.target.value)}
+                    fullWidth
+                    required
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">$</InputAdornment>
+                      ),
+                    }}
+                  />
+                  <TextField
+                    label="URL de imagen"
                     value={newItemImage}
                     onChange={(event) => setNewItemImage(event.target.value)}
                     fullWidth
+                    required
                   />
                   <TextField
-                    label="Mensaje principal (opcional)"
+                    label="URL del video (YouTube embed)"
+                    value={newItemVideoUrl}
+                    onChange={(event) => setNewItemVideoUrl(event.target.value)}
+                    fullWidth
+                    required
+                    helperText="Ej: https://www.youtube.com/embed/VIDEO_ID"
+                  />
+                  <TextField
+                    label="Mensaje principal"
                     value={newItemHighlight}
                     onChange={(event) =>
                       setNewItemHighlight(event.target.value)
@@ -351,15 +411,22 @@ function AdminPage({
                     fullWidth
                     multiline
                     minRows={2}
+                    required
                   />
                   <TextField
-                    label="Beneficio extra (opcional)"
+                    label="Beneficio extra"
                     value={newItemAccent}
                     onChange={(event) => setNewItemAccent(event.target.value)}
                     fullWidth
                     multiline
                     minRows={2}
+                    required
                   />
+                  {itemError && (
+                    <Typography variant="body2" sx={{ color: 'error.main', mt: -1 }}>
+                      {itemError}
+                    </Typography>
+                  )}
                   <Button
                     type="submit"
                     variant="contained"
@@ -448,7 +515,7 @@ function AdminPage({
                     />
                     <IconButton
                       color="error"
-                      onClick={() => onDeleteCategory(category.id)}
+                      onClick={() => void onDeleteCategory(category.id)}
                       size="small"
                     >
                       <DeleteIcon fontSize="small" />
@@ -526,12 +593,13 @@ function AdminPage({
                           variant="body2"
                           sx={{ color: 'text.secondary', fontSize: 12 }}
                         >
-                          {categoryName} · {item.price.toFixed(0)}€
+                          {categoryName} · US$ {Number(item.priceUsd).toFixed(0)} · $
+                          {Number(item.priceArs).toFixed(0)}
                         </Typography>
                       </Box>
                       <IconButton
                         color="error"
-                        onClick={() => onDeleteItem(item.id)}
+                        onClick={() => void onDeleteItem(item.id)}
                         size="small"
                       >
                         <DeleteIcon fontSize="small" />
