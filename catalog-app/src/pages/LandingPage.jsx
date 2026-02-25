@@ -300,12 +300,14 @@ function LandingPage({ categories, items }) {
           )}
         </Box>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={3} alignItems="stretch" justifyContent="left">
           {filteredItems.map((item) => (
-            <Grid key={item.id} item xs={16} sm={2} md={2} lg={3}>
+            <Grid key={item.id} item xs={16} sm={5} md={5} lg={5}>
               <Card
                 onClick={() => handleOpenItem(item)}
                 sx={{
+                  flexGrow:1,
+                  maxWidth:360,
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -374,17 +376,17 @@ function LandingPage({ categories, items }) {
                     </Box>
                     <Box
                       sx={{
-                        px: 1.5,
+                        px: 2,
                         py: 0.8,
                         borderRadius: 999,
                         bgcolor: 'rgba(15,23,42,0.85)',
                         border: '1px solid rgba(148, 163, 184, 0.7)',
                       }}
                     >
-                      <Stack spacing={0} alignItems="flex-end">
+                      <Stack spacing={0} alignItems="flex-end" minWidth={"90px"}>
                         <Typography
                           variant="subtitle2"
-                          sx={{ color: '#e5e7eb', fontWeight: 800, lineHeight: 1.1 }}
+                          sx={{ color: '#e5e7eb', fontWeight: 800, lineHeight: 1.1, marginRight:0, alignSelf:'center' }}
                         >
                           {`${formatUsd.format(item.priceUsd)} USD`}
                         </Typography>
@@ -799,10 +801,11 @@ function LandingPage({ categories, items }) {
         fullScreen={isSmallScreen}
         PaperProps={{
           sx: {
-            borderRadius: { xs: 0, md: 4 },
+            borderRadius: { xs: 0, md: 2 },
             overflow: 'hidden',
           },
         }}
+        style={{justifyContent:'center'}}
       >
         {openItem && (
           <DialogContent
@@ -827,8 +830,9 @@ function LandingPage({ categories, items }) {
 
             <Grid
               container
-              spacing={{ xs: 2, md: 3 }}
-              alignItems="stretch"
+              spacing={{ xs: 5, md: 23 }}
+              alignItems="center"
+              justifyContent="center"
             >
               <Grid item xs={12} md={5}>
                 <Box
@@ -898,7 +902,7 @@ function LandingPage({ categories, items }) {
                         variant="subtitle2"
                         sx={{ fontWeight: 700 }}
                       >
-                        {`${formatUsd.format(openItem.priceUsd)} USD`}
+                        {`${formatUsd.format(openItem.priceUsd)}`}
                       </Typography>
                       <Typography
                         variant="caption"
