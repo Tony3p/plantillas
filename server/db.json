@@ -1,0 +1,68 @@
+{
+  "categories": [
+    {
+      "id": "finances",
+      "name": "Finanzas",
+      "description": "Control total de tus finanzas personales y de negocio.",
+      "color": "#eef2ff"
+    },
+    {
+      "id": "personal-expenses",
+      "name": "Gastos personales",
+      "description": "Sigue al detalle tus gastos del día a día.",
+      "color": "#ecfeff"
+    },
+    {
+      "id": "planning",
+      "name": "Planificación",
+      "description": "Organiza tus metas, rutinas y proyectos.",
+      "color": "#fefce8"
+    }
+  ],
+  "items": [
+    {
+      "id": "sheet-001",
+      "name": "Dashboard financiero mensual",
+      "categoryId": "finances",
+      "priceUsd": 19,
+      "priceArs": 19900,
+      "image": "https://images.pexels.com/photos/669610/pexels-photo-669610.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      "highlight": "Ideal para freelancers y pequeños negocios",
+      "accent": "Incluye gráficos listos para usar",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      "id": "sheet-003",
+      "name": "Planificador semanal premium",
+      "categoryId": "planning",
+      "priceUsd": 9,
+      "priceArs": 9900,
+      "image": "https://images.pexels.com/photos/4144222/pexels-photo-4144222.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      "highlight": "Diseñado para creadores y estudiantes",
+      "accent": "Vista limpia y minimalista",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      "id": "sheet-004",
+      "name": "Control de suscripciones",
+      "categoryId": "personal-expenses",
+      "priceUsd": 8,
+      "priceArs": 8900,
+      "image": "https://images.pexels.com/photos/6303684/pexels-photo-6303684.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      "highlight": "Evita pagos sorpresa cada mes",
+      "accent": "Recordatorios de renovación",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      "id": "plntilla1234-7371",
+      "name": "plntilla1234",
+      "categoryId": "personal-expenses",
+      "priceUsd": 12,
+      "priceArs": 113322,
+      "image": "https://images.pexels.com/photos/6303684/pexels-photo-6303684.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      "highlight": "Mensaje 1",
+      "accent": "mensaje 2",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    }
+  ]
+}
