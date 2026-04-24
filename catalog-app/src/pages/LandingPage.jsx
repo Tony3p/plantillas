@@ -100,12 +100,15 @@ function LandingPage({ categories, items }) {
             justifyContent: { xs: 'center', md: 'flex-start' },
           }}
         >
-          <Stack spacing={2.5}>
+          <Stack spacing={2.5} display={"flex"}>
+
             <Chip
               label="Plantillas de hojas de cálculo"
               color="secondary"
               variant="filled"
+              bgcolor="#FFC107"
               sx={{
+                backgroundColor:"#FFC107",
                 alignSelf: 'flex-start',
                 fontWeight: 600,
                 boxShadow: '0 10px 30px rgba(248, 113, 113, 0.25)',
@@ -114,22 +117,42 @@ function LandingPage({ categories, items }) {
             <Typography
               component="h1"
               sx={{
-                fontSize: { xs: 32, md: 40 },
+                fontSize: { xs: 30, md: 40 },
                 fontWeight: 800,
                 letterSpacing: -0.5,
+                display:"flex",
+
+                '@media (max-width: 1024px)': {
+                  fontSize: { xs: 23, md: 30 },
+
+                },
+                
+
+                '@media (max-width: 612px)': {
+                  display: 'flex',
+                  flexDirection:'column',
+                  fontSize: { xs: 23, md: 24 },
+
+                },
+                '@media (max-width: 400px)': {
+
+                  fontSize: { xs: 21, md: 24 },
+
+                },
+               
               }}
             >
               Tu sistema en una hoja:
               <br />
-              <Box component="span" sx={{ color: 'primary.main' }}>
-                tu plantilla perfecta
+              <Box component="span" sx={{ color: '#2196F3',marginLeft:"15px" }}>
+                Tu plantilla perfecta
               </Box>
             </Typography>
+
             <Typography
               variant="body1"
               sx={{
                 color: 'text.secondary',
-                maxWidth: 480,
                 fontSize: { xs: 14, md: 16 },
               }}
             >
@@ -175,63 +198,7 @@ function LandingPage({ categories, items }) {
             justifyContent: { xs: 'center', md: 'flex-end' },
           }}
         >
-          <Box
-            sx={{
-              position: 'relative',
-              borderRadius: { xs: 3, md: 4 },
-              overflow: 'hidden',
-              background:
-                'radial-gradient(circle at 0% 0%, #4f46e5 0, transparent 55%), radial-gradient(circle at 100% 100%, #f97316 0, transparent 55%)',
-              p: { xs: 1.2, md: 1.5 },
-              boxShadow:
-                '0 28px 80px rgba(15, 23, 42, 0.55), 0 0 0 1px rgba(148, 163, 184, 0.35)',
-              width: { xs: '100%', sm: '90%', md: '100%' },
-              maxWidth: 440,
-            }}
-          >
-            <Box
-              sx={{
-                borderRadius: { xs: 2.5, md: 3 },
-                bgcolor: 'background.paper',
-                p: { xs: 1.6, md: 2 },
-                display: 'grid',
-                gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
-                gap: 0.75,
-                minHeight: { xs: 210, sm: 240, md: 260 },
-              }}
-            >
-              {Array.from({ length: 18 }).map((_, index) => (
-                <Box
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={index}
-                  sx={{
-                    borderRadius: 1.5,
-                    bgcolor:
-                      index % 7 === 0
-                        ? 'primary.main'
-                        : index % 5 === 0
-                        ? 'secondary.main'
-                        : 'rgba(148,163,184,0.22)',
-                    opacity: index % 7 === 0 || index % 5 === 0 ? 0.9 : 1,
-                    gridColumn:
-                      index % 7 === 0
-                        ? 'span 2'
-                        : index % 5 === 0
-                        ? 'span 3'
-                        : 'span 1',
-                    height:
-                      index % 7 === 0
-                        ? 80
-                        : index % 5 === 0
-                        ? 64
-                        : index % 3 === 0
-                        ? 40
-                        : 28,
-                  }}
-                />
-              ))}
-            </Box>
-          </Box>
+       
         </Grid>
       </Grid>
 
@@ -503,154 +470,7 @@ function LandingPage({ categories, items }) {
         </Grid>
       </Box>
 
-      <Box
-        id="about-section"
-        sx={{
-          mb: 6,
-          p: { xs: 3, md: 4 },
-          borderRadius: 4,
-          bgcolor: 'rgba(15,23,42,0.03)',
-          border: '1px solid rgba(148, 163, 184, 0.35)',
-        }}
-      >
-        <Grid container spacing={4} alignItems="stretch">
-          <Grid item xs={12} md={7}>
-            <Stack spacing={2.5} sx={{ height: '100%' }}>
-              <Typography variant="overline" sx={{ letterSpacing: 1.5 }}>
-                Quiénes somos
-              </Typography>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 700, maxWidth: 460 }}
-              >
-                Un pequeño estudio obsesionado con las hojas que simplifican tu
-                vida financiera.
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{ color: 'text.secondary', maxWidth: 520 }}
-              >
-                Diseñamos plantillas claras, bonitas y listas para usar para
-                personas que quieren tener control sin complicarse. Cada
-                plantilla está pensada para que puedas empezar en minutos, no
-                en horas.
-              </Typography>
-              <Stack
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={2}
-                sx={{ mt: 1 }}
-              >
-                <Box
-                  sx={{
-                    flex: 1,
-                    p: 2,
-                    borderRadius: 3,
-                    bgcolor: 'background.paper',
-                    boxShadow:
-                      '0 18px 40px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(148, 163, 184, 0.25)',
-                  }}
-                >
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ fontWeight: 600, mb: 0.5 }}
-                  >
-                    Menos caos, más claridad
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: 'text.secondary', fontSize: 13 }}
-                  >
-                    Nos enfocamos en lo esencial: que entiendas tus números de
-                    un vistazo y tomes mejores decisiones cada mes.
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    flex: 1,
-                    p: 2,
-                    borderRadius: 3,
-                    border: '1px dashed rgba(148, 163, 184, 0.6)',
-                  }}
-                >
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ fontWeight: 600, mb: 0.5 }}
-                  >
-                    Diseñadas para personas reales
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: 'text.secondary', fontSize: 13 }}
-                  >
-                    Probamos nuestras plantillas con freelancers, creadores y
-                    personas que simplemente quieren dejar de improvisar con su
-                    dinero.
-                  </Typography>
-                </Box>
-              </Stack>
-            </Stack>
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Box
-              sx={{
-                height: '100%',
-                borderRadius: 3,
-                p: 2.5,
-                bgcolor: 'background.paper',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                gap: 2,
-                boxShadow:
-                  '0 20px 50px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(148, 163, 184, 0.3)',
-              }}
-            >
-              <Stack spacing={1.5}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                  Lo que nos guía
-                </Typography>
-                <Stack direction="row" spacing={1} flexWrap="wrap">
-                  <Chip
-                    label="Claridad"
-                    size="small"
-                    color="primary"
-                    variant="outlined"
-                  />
-                  <Chip
-                    label="Sencillez"
-                    size="small"
-                    color="secondary"
-                    variant="outlined"
-                  />
-                  <Chip
-                    label="Resultados"
-                    size="small"
-                    variant="outlined"
-                  />
-                </Stack>
-              </Stack>
-              <Divider />
-              <Stack spacing={1}>
-                <Typography
-                  variant="body2"
-                  sx={{ color: 'text.secondary', fontSize: 13 }}
-                >
-                  Cada plantilla incluye instrucciones sencillas para que sepas
-                  exactamente qué rellenar y cómo leer tus datos, incluso si no
-                  te llevas bien con Excel.
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ color: 'text.disabled', fontSize: 11 }}
-                >
-                  Construido en Google Sheets y Excel · Sin código · Sin
-                  suscripciones.
-                </Typography>
-              </Stack>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
+
 
       <Box id="faq-section" sx={{ mb: 2 }}>
         <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5 }}>

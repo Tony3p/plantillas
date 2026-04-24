@@ -11,6 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+cors.json
+plantillas-aritrolo-firebase-adminsdk-fbsvc-b219743d03.json
+
 
 # Editor directories and files
 .vscode/*

@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'https://plantillas-db.vercel.app/api',
+      '/api': 'http://localhost:5174/', //http://localhost:5174/  https://plantillas-db.vercel.app/api
     },
   },
 })

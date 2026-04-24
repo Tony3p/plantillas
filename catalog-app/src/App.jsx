@@ -22,82 +22,11 @@ import {
   deleteItem as apiDeleteItem,
 } from './api.js'
 
-const seedCategories = [
-  {
-    id: 'finances',
-    name: 'Finanzas',
-    description: 'Control total de tus finanzas personales y de negocio.',
-    color: '#eef2ff',
-  },
-  {
-    id: 'personal-expenses',
-    name: 'Gastos personales',
-    description: 'Sigue al detalle tus gastos del día a día.',
-    color: '#ecfeff',
-  },
-  {
-    id: 'planning',
-    name: 'Planificación',
-    description: 'Organiza tus metas, rutinas y proyectos.',
-    color: '#fefce8',
-  },
-]
-
-const seedItems = [
-  {
-    id: 'sheet-001',
-    name: 'Dashboard financiero mensual',
-    categoryId: 'finances',
-    priceUsd: 19,
-    priceArs: 19900,
-    image:
-      'https://images.pexels.com/photos/669610/pexels-photo-669610.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    highlight: 'Ideal para freelancers y pequeños negocios',
-    accent: 'Incluye gráficos listos para usar',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-  },
-  {
-    id: 'sheet-002',
-    name: 'Control de gastos personales',
-    categoryId: 'personal-expenses',
-    priceUsd: 12,
-    priceArs: 12900,
-    image:
-      'https://images.pexels.com/photos/4386324/pexels-photo-4386324.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    highlight: 'Perfecto para entender a dónde va tu dinero',
-    accent: 'Alertas visuales por categoría',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-  },
-  {
-    id: 'sheet-003',
-    name: 'Planificador semanal premium',
-    categoryId: 'planning',
-    priceUsd: 9,
-    priceArs: 9900,
-    image:
-      'https://images.pexels.com/photos/4144222/pexels-photo-4144222.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    highlight: 'Diseñado para creadores y estudiantes',
-    accent: 'Vista limpia y minimalista',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-  },
-  {
-    id: 'sheet-004',
-    name: 'Control de suscripciones',
-    categoryId: 'personal-expenses',
-    priceUsd: 8,
-    priceArs: 8900,
-    image:
-      'https://images.pexels.com/photos/6303684/pexels-photo-6303684.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    highlight: 'Evita pagos sorpresa cada mes',
-    accent: 'Recordatorios de renovación',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-  },
-]
 
 function App() {
   const location = useLocation()
-  const [categories, setCategories] = useState(seedCategories)
-  const [items, setItems] = useState(seedItems)
+  const [categories, setCategories] = useState([])
+  const [items, setItems] = useState([])
 
   const refreshDb = async () => {
     const db = await fetchDb()
@@ -156,7 +85,7 @@ function App() {
   )
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF' }}>
       <AppBar
         position="sticky"
         elevation={0}
@@ -166,7 +95,7 @@ function App() {
           borderColor: 'divider',
           backdropFilter: 'blur(18px)',
           background:
-            'linear-gradient(to right, rgba(15,23,42,0.92), rgba(30,64,175,0.92))',
+            'linear-gradient(to right, #4CAF50, #2E7D32)',
         }}
       >
         <Toolbar sx={{ maxWidth: 1200, mx: 'auto', width: '100%' }}>
@@ -219,13 +148,6 @@ function App() {
             </Button>
             <Button
               color="inherit"
-              onClick={() => handleScrollToSection('about-section')}
-              sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
-            >
-              Quiénes somos
-            </Button>
-            <Button
-              color="inherit"
               onClick={() => handleScrollToSection('faq-section')}
               sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
             >
@@ -242,7 +164,7 @@ function App() {
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+      <Container  maxWidth="lg" bgcolor="#EFE6DD" sx={{ py: { xs: 4, md: 6 } }} >
         <Routes>
           <Route
             path="/"

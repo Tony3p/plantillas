@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import ImageField from '../components/ImageField'
 import {
   Box,
   Button,
@@ -47,6 +48,9 @@ function AdminPage({
   const [newItemPriceUsd, setNewItemPriceUsd] = useState('')
   const [newItemPriceArs, setNewItemPriceArs] = useState('')
   const [newItemImage, setNewItemImage] = useState('')
+  const [newItemImage2, setNewItemImage2] = useState('')
+  const [newItemImage3, setNewItemImage3] = useState('')
+
   const [newItemVideoUrl, setNewItemVideoUrl] = useState('')
   const [newItemHighlight, setNewItemHighlight] = useState('')
   const [newItemAccent, setNewItemAccent] = useState('')
@@ -123,6 +127,8 @@ function AdminPage({
         priceUsd: numericUsd,
         priceArs: numericArs,
         image: newItemImage.trim(),
+        image2: newItemImage2.trim(),
+        image3: newItemImage3.trim(),
         videoUrl: newItemVideoUrl.trim(),
         highlight: newItemHighlight.trim(),
         accent: newItemAccent.trim(),
@@ -387,12 +393,23 @@ function AdminPage({
                       ),
                     }}
                   />
-                  <TextField
-                    label="URL de imagen"
+                  <ImageField
+                    label="imagen 1"
+                    folder="plantillas-portadas" // La carpeta que se creará en tu Storage
                     value={newItemImage}
-                    onChange={(event) => setNewItemImage(event.target.value)}
-                    fullWidth
-                    required
+                    onChange={(url) => setNewItemImage(url)}
+                  />
+                  <ImageField
+                    label="imagen 2"
+                    folder="plantillas-portadas" // La carpeta que se creará en tu Storage
+                    value={newItemImage2}
+                    onChange={(url) => setNewItemImage2(url)}
+                  />
+                  <ImageField
+                    label="imagen 3"
+                    folder="plantillas-portadas" // La carpeta que se creará en tu Storage
+                    value={newItemImage3}
+                    onChange={(url) => setNewItemImage3(url)}
                   />
                   <TextField
                     label="URL del video (YouTube embed)"
