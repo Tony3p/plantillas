@@ -19,6 +19,7 @@ import {
   createCategory,
   deleteCategory as apiDeleteCategory,
   createItem,
+  updateItem as apiUpdateItem,
   deleteItem as apiDeleteItem,
 } from './api.js'
 
@@ -70,6 +71,11 @@ function App() {
     await refreshDb()
   }
 
+  const updateItem = async (id, item) => {
+    await apiUpdateItem(id, item)
+    await refreshDb()
+  }
+
   const deleteItem = async (id) => {
     await apiDeleteItem(id)
     await refreshDb()
@@ -95,7 +101,7 @@ function App() {
           borderColor: 'divider',
           backdropFilter: 'blur(18px)',
           background:
-            'linear-gradient(to right, #4CAF50, #2E7D32)',
+            'linear-gradient(to right, #2E7D32, #1B5E20)',
         }}
       >
         <Toolbar sx={{ maxWidth: 1200, mx: 'auto', width: '100%' }}>
@@ -181,6 +187,7 @@ function App() {
                 onAddCategory={addCategory}
                 onDeleteCategory={deleteCategory}
                 onAddItem={addItem}
+                onUpdateItem={updateItem}
                 onDeleteItem={deleteItem}
               />
             }

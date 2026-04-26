@@ -77,6 +77,8 @@ app.post('/api/items', async (req, res) => {
     categoryId,
     priceUsd,
     priceArs,
+    discountUsd,
+    discountArs,
     image,
     image2,
     image3,
@@ -130,10 +132,91 @@ app.post('/api/items', async (req, res) => {
       videoUrl: String(videoUrl).trim(),
     }
 
+    if (discountUsd && discountArs) {
+      const numDiscUsd = Number(discountUsd)
+      const numDiscArs = Number(discountArs)
+      if (Number.isFinite(numDiscUsd) && numDiscUsd > 0 && Number.isFinite(numDiscArs) && numDiscArs > 0) {
+        item.discountUsd = numDiscUsd
+        item.discountArs = numDiscArs
+      }
+    } else if (discountUsd === '' || discountArs === '' || discountUsd === null || discountArs === null) {
+      item.discountUsd = null
+      item.discountArs = null
+    }
+
     await FirestoreService.createWithCustomId("sheets", item.id, item)
     res.status(201).json(item)
   } catch (error) {
     res.status(500).json({ error: error?.message || 'Failed to create item' })
+  }
+})
+
+app.put('/api/items/:id', async (req, res) => {
+  const { id } = req.params
+  const {
+    name,
+    categoryId,
+    priceUsd,
+    priceArs,
+    discountUsd,
+    discountArs,
+    highlight,
+    accent,
+    videoUrl,
+  } = req.body || {}
+
+  if (
+    !name ||
+    !categoryId ||
+    priceUsd == null ||
+    priceArs == null ||
+    !highlight ||
+    !accent ||
+    !videoUrl
+  ) {
+    return badRequest(
+      res,
+      'Missing required fields: name, categoryId, priceUsd, priceArs, highlight, accent, videoUrl'
+    )
+  }
+
+  const numericUsd = Number(priceUsd)
+  const numericArs = Number(priceArs)
+  if (!Number.isFinite(numericUsd) || numericUsd <= 0) {
+    return badRequest(res, 'Invalid priceUsd')
+  }
+  if (!Number.isFinite(numericArs) || numericArs <= 0) {
+    return badRequest(res, 'Invalid priceArs')
+  }
+
+  try {
+    const updatedItem = {
+      name: String(name).trim(),
+      categoryId: String(categoryId),
+      priceUsd: numericUsd,
+      priceArs: numericArs,
+      highlight: String(highlight).trim(),
+      accent: String(accent).trim(),
+      videoUrl: String(videoUrl).trim(),
+    }
+
+    if (discountUsd && discountArs) {
+      const numDiscUsd = Number(discountUsd)
+      const numDiscArs = Number(discountArs)
+      if (Number.isFinite(numDiscUsd) && numDiscUsd > 0 && Number.isFinite(numDiscArs) && numDiscArs > 0) {
+        updatedItem.discountUsd = numDiscUsd
+        updatedItem.discountArs = numDiscArs
+      }
+    } else if (discountUsd === '' || discountArs === '' || discountUsd === null || discountArs === null) {
+      // Clear out discounts if they were removed
+      updatedItem.discountUsd = null
+      updatedItem.discountArs = null
+    }
+
+    await FirestoreService.update("sheets", id, updatedItem)
+    res.json({ id, ...updatedItem })
+  } catch (error) {
+    res.status(500).json({ error: error?.message || 'Failed to update item' })
   }
 })
 

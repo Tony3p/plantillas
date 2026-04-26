@@ -19,11 +19,15 @@ import {
   IconButton,
   useMediaQuery,
   useTheme,
+  TextField,
+  MenuItem,
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import CloseIcon from '@mui/icons-material/Close'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
+import ProductModal from '../components/ProductModal'
+import ProductCard from '../components/ProductCard'
 
 function LandingPage({ categories, items }) {
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -94,22 +98,28 @@ function LandingPage({ categories, items }) {
         <Grid
           item
           xs={12}
-          md={6}
+          md={12}
           sx={{
             display: 'flex',
-            justifyContent: { xs: 'center', md: 'flex-start' },
+            justifyContent: 'center',
           }}
         >
-          <Stack spacing={2.5} display={"flex"}>
+          <Stack 
+            spacing={2.5} 
+            sx={{ 
+              display: 'flex', 
+              alignItems: { xs: 'center', sm: 'flex-start' }, 
+              textAlign: { xs: 'center', sm: 'left' } 
+            }}
+          >
 
             <Chip
               label="Plantillas de hojas de cálculo"
               color="secondary"
               variant="filled"
-              bgcolor="#FFC107"
               sx={{
                 backgroundColor:"#FFC107",
-                alignSelf: 'flex-start',
+                alignSelf: { xs: 'center', sm: 'flex-start' },
                 fontWeight: 600,
                 boxShadow: '0 10px 30px rgba(248, 113, 113, 0.25)',
               }}
@@ -160,6 +170,36 @@ function LandingPage({ categories, items }) {
               personales y planificación. Sólo duplica, personaliza y empieza a
               ahorrar tiempo.
             </Typography>
+
+            {/* Mobile-only "Ver catálogo" CTA */}
+            <Button
+              variant="contained"
+              disableElevation
+              onClick={() => {
+                const el = document.getElementById('catalog-section')
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }}
+              sx={{
+                display: { xs: 'inline-flex', sm: 'none' },
+                alignSelf: 'center',
+                px: 4,
+                py: 1.4,
+                borderRadius: 999,
+                fontWeight: 700,
+                fontSize: 15,
+                background: 'linear-gradient(to right, #2E7D32, #1B5E20)',
+                color: 'white',
+                boxShadow: '0 8px 20px rgba(27,94,32,0.25)',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 12px 24px rgba(27,94,32,0.35)',
+                },
+                transition: 'all 0.2s',
+              }}
+            >
+              Ver catálogo
+            </Button>
+
             <Stack direction="row" spacing={2} alignItems="center">
               <Box
                 sx={{
@@ -188,18 +228,6 @@ function LandingPage({ categories, items }) {
             </Stack>
           </Stack>
         </Grid>
-        <Grid
-          item
-          xs={12}
-          md={6}
-          sx={{
-            mt: { xs: 1, md: 0 },
-            display: { xs: 'none', md: 'flex' },
-            justifyContent: { xs: 'center', md: 'flex-end' },
-          }}
-        >
-       
-        </Grid>
       </Grid>
 
       <Box id="catalog-section" sx={{ mb: 6 }}>
@@ -214,7 +242,25 @@ function LandingPage({ categories, items }) {
             <Typography variant="h6" sx={{ fontWeight: 700 }}>
               Catálogo de plantillas
             </Typography>
-            <Stack direction="row" spacing={1} flexWrap="wrap">
+
+            <Box sx={{ display: { xs: 'block', sm: 'none' }, width: '100%' }}>
+              <TextField
+                select
+                fullWidth
+                size="small"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <MenuItem value="all">Todas</MenuItem>
+                {categories.map((c) => (
+                  <MenuItem key={c.id} value={c.id}>
+                    {c.name} {c.itemCount ? `(${c.itemCount})` : ''}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+
+            <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ display: { xs: 'none', sm: 'flex' } }}>
               <Chip
                 label="Todas"
                 clickable
@@ -267,185 +313,27 @@ function LandingPage({ categories, items }) {
           )}
         </Box>
 
-        <Grid container spacing={3} alignItems="stretch" justifyContent="left">
+        <Box 
+          sx={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 360px))', 
+            justifyContent: 'center', 
+            gap: 3 
+          }}
+        >
           {filteredItems.map((item) => (
-            <Grid key={item.id} item xs={16} sm={5} md={5} lg={5}>
-              <Card
+            <Box key={item.id} sx={{ display: 'flex' }}>
+              <ProductCard
+                item={item}
                 onClick={() => handleOpenItem(item)}
-                sx={{
-                  flexGrow:1,
-                  maxWidth:360,
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  bgcolor: 'background.paper',
-                  cursor: 'pointer',
-                  transition: 'transform 180ms ease, box-shadow 180ms ease',
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow:
-                      '0 20px 45px rgba(15, 23, 42, 0.28), 0 0 0 1px rgba(148, 163, 184, 0.5)',
-                  },
-                }}
-              >
-                <Box sx={{ position: 'relative' }}>
-                  <CardMedia
-                    component="img"
-                    image={item.image}
-                    alt={item.name}
-                    sx={{
-                      height: 150,
-                      objectFit: 'cover',
-                      filter: 'saturate(1.05)',
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      inset: 0,
-                      background:
-                        'linear-gradient(to top, rgba(15,23,42,0.7), transparent 55%)',
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: 14,
-                      left: 14,
-                      right: 14,
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-end',
-                    }}
-                  >
-                    <Box>
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          color: 'rgba(241,245,249,0.9)',
-                          textTransform: 'uppercase',
-                          letterSpacing: 1,
-                          fontSize: 11,
-                        }}
-                      >
-                        Hoja de cálculo
-                      </Typography>
-                      <Typography
-                        variant="subtitle1"
-                        sx={{
-                          color: '#f9fafb',
-                          fontWeight: 700,
-                          textShadow: '0 2px 10px rgba(15,23,42,0.7)',
-                        }}
-                      >
-                        {item.name}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        px: 2,
-                        py: 0.8,
-                        borderRadius: 999,
-                        bgcolor: 'rgba(15,23,42,0.85)',
-                        border: '1px solid rgba(148, 163, 184, 0.7)',
-                      }}
-                    >
-                      <Stack spacing={0} alignItems="flex-end" minWidth={"90px"}>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ color: '#e5e7eb', fontWeight: 800, lineHeight: 1.1, marginRight:0, alignSelf:'center' }}
-                        >
-                          {`${formatUsd.format(item.priceUsd)} `}
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: 'rgba(229,231,235,0.92)',
-                            fontWeight: 700,
-                            lineHeight: 1.1,
-                          }}
-                        >
-                          {`${formatArs.format(item.priceArs)} ARS`}
-                        </Typography>
-                      </Stack>
-                    </Box>
-                  </Box>
-                </Box>
-
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Stack spacing={1.2}>
-                    <Typography
-                      variant="body2"
-                      sx={{ color: 'text.secondary' }}
-                    >
-                      {item.highlight}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ fontSize: 13, color: 'text.secondary' }}
-                    >
-                      {item.accent}
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{ color: 'text.secondary', fontSize: 12 }}
-                      >
-                        Editable en Google Sheets y Excel.
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          px: 1,
-                          py: 0.3,
-                          borderRadius: 999,
-                          bgcolor: 'rgba(16, 185, 129, 0.08)',
-                          color: 'rgb(5, 150, 105)',
-                          fontWeight: 600,
-                        }}
-                      >
-                        Sin suscripción
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </CardContent>
-
-                <CardActions
-                  sx={{
-                    px: 2,
-                    pb: 2,
-                    pt: 0,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ color: 'text.secondary', fontWeight: 600 }}
-                  >
-                    Pago único · Entrega inmediata
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    disableElevation
-                    sx={{ px: 2.5 }}
-                  >
-                    Ver detalles
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
+                formatUsd={formatUsd}
+                formatArs={formatArs}
+              />
+            </Box>
           ))}
 
           {filteredItems.length === 0 && (
-            <Grid item xs={12}>
+            <Box sx={{ gridColumn: '1 / -1' }}>
               <Box
                 sx={{
                   p: 4,
@@ -465,9 +353,9 @@ function LandingPage({ categories, items }) {
                   Añade nuevas hojas desde el panel de administrador.
                 </Typography>
               </Box>
-            </Grid>
+            </Box>
           )}
-        </Grid>
+        </Box>
       </Box>
 
 
@@ -613,188 +501,14 @@ function LandingPage({ categories, items }) {
         </Grid>
       </Box>
 
-      <Dialog
-        open={Boolean(openItem)}
-        onClose={handleCloseItem}
-        fullWidth
-        maxWidth="md"
-        fullScreen={isSmallScreen}
-        PaperProps={{
-          sx: {
-            borderRadius: { xs: 0, md: 2 },
-            overflow: 'hidden',
-          },
-        }}
-        style={{justifyContent:'center'}}
-      >
-        {openItem && (
-          <DialogContent
-            sx={{
-              p: { xs: 2, md: 3 },
-              pb: { xs: 2.5, md: 3 },
-              position: 'relative',
-            }}
-          >
-            <IconButton
-              onClick={handleCloseItem}
-              sx={{
-                position: 'absolute',
-                top: 12,
-                right: 12,
-                zIndex: 2,
-              }}
-              aria-label="Cerrar"
-            >
-              <CloseIcon />
-            </IconButton>
-
-            <Grid
-              container
-              spacing={{ xs: 5, md: 23 }}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Grid item xs={12} md={5}>
-                <Box
-                  sx={{
-                    borderRadius: 3,
-                    overflow: 'hidden',
-                    boxShadow:
-                      '0 14px 40px rgba(15, 23, 42, 0.3), 0 0 0 1px rgba(148, 163, 184, 0.4)',
-                    height: '100%',
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    image={openItem.image}
-                    alt={openItem.name}
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      maxHeight: { xs: 260, md: 420 },
-                      objectFit: 'cover',
-                    }}
-                  />
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} md={7}>
-                <Stack spacing={2.25} sx={{ height: '100%' }}>
-                  <Stack spacing={0.75}>
-                    <Typography variant="overline" sx={{ letterSpacing: 1.4 }}>
-                      Plantilla · Hoja de cálculo
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 700,
-                        letterSpacing: -0.2,
-                      }}
-                    >
-                      {openItem.name}
-                    </Typography>
-                  </Stack>
-
-                  <Stack spacing={1}>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      {openItem.highlight}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ color: 'text.secondary', fontSize: 13 }}
-                    >
-                      {openItem.accent}
-                    </Typography>
-                  </Stack>
-
-                  <Box
-                    sx={{
-                      alignSelf: 'flex-start',
-                      px: 1.6,
-                      py: 0.9,
-                      borderRadius: 999,
-                      bgcolor: 'rgba(15,23,42,0.03)',
-                      border: '1px solid rgba(148, 163, 184, 0.55)',
-                    }}
-                  >
-                    <Stack spacing={0.2}>
-                      <Typography
-                        variant="subtitle2"
-                        sx={{ fontWeight: 700 }}
-                      >
-                        {`${formatUsd.format(openItem.priceUsd)}`}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'text.secondary', fontWeight: 600 }}
-                      >
-                        {`${formatArs.format(openItem.priceArs)} ARS`}
-                      </Typography>
-                    </Stack>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      borderRadius: 3,
-                      overflow: 'hidden',
-                      boxShadow:
-                        '0 12px 35px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(148, 163, 184, 0.4)',
-                      bgcolor: 'background.paper',
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        position: 'relative',
-                        width: '100%',
-                        pt: '56.25%',
-                      }}
-                    >
-                      <Box
-                        component="iframe"
-                        src={dummyVideoUrl}
-                        title="Vista previa de la plantilla"
-                        sx={{
-                          border: 0,
-                          position: 'absolute',
-                          inset: 0,
-                          width: '100%',
-                          height: '100%',
-                        }}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                      />
-                    </Box>
-                  </Box>
-
-                  <Stack
-                    direction={{ xs: 'column', sm: 'row' }}
-                    spacing={1.5}
-                    sx={{ mt: 'auto' }}
-                  >
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      disableElevation
-                      sx={{ flex: 1, py: 1.1 }}
-                      onClick={handleWhatsAppCompra}
-                    >
-                      Comprar por WhatsApp
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={handleCloseItem}
-                      sx={{ flex: 1, py: 1.1 }}
-                    >
-                      Seguir viendo
-                    </Button>
-                  </Stack>
-                </Stack>
-              </Grid>
-            </Grid>
-          </DialogContent>
-        )}
-      </Dialog>
+      <ProductModal 
+        open={Boolean(openItem)} 
+        item={openItem} 
+        onClose={handleCloseItem} 
+        onBuy={handleWhatsAppCompra} 
+        formatUsd={formatUsd} 
+        formatArs={formatArs} 
+      />
     </Box>
   )
 }

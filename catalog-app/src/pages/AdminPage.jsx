@@ -16,6 +16,7 @@ import {
   Typography,
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import LockIcon from '@mui/icons-material/Lock'
@@ -30,8 +31,10 @@ function AdminPage({
   onAddCategory,
   onDeleteCategory,
   onAddItem,
+  onUpdateItem,
   onDeleteItem,
 }) {
+  const [editingItemId, setEditingItemId] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -47,6 +50,8 @@ function AdminPage({
   const [newItemCategoryId, setNewItemCategoryId] = useState('')
   const [newItemPriceUsd, setNewItemPriceUsd] = useState('')
   const [newItemPriceArs, setNewItemPriceArs] = useState('')
+  const [newItemDiscountUsd, setNewItemDiscountUsd] = useState('')
+  const [newItemDiscountArs, setNewItemDiscountArs] = useState('')
   const [newItemImage, setNewItemImage] = useState('')
   const [newItemImage2, setNewItemImage2] = useState('')
   const [newItemImage3, setNewItemImage3] = useState('')
@@ -95,6 +100,42 @@ function AdminPage({
     }
   }
 
+  const handleEditItemClick = (item) => {
+    setEditingItemId(item.id)
+    setNewItemName(item.name || '')
+    setNewItemCategoryId(item.categoryId || '')
+    setNewItemPriceUsd(item.priceUsd ? String(item.priceUsd) : '')
+    setNewItemPriceArs(item.priceArs ? String(item.priceArs) : '')
+    setNewItemDiscountUsd(item.discountUsd ? String(item.discountUsd) : '')
+    setNewItemDiscountArs(item.discountArs ? String(item.discountArs) : '')
+    setNewItemImage(item.images?.[0] || item.image || '')
+    setNewItemImage2(item.images?.[1] || item.image2 || '')
+    setNewItemImage3(item.images?.[2] || item.image3 || '')
+    setNewItemVideoUrl(item.videoUrl || '')
+    setNewItemHighlight(item.highlight || '')
+    setNewItemAccent(item.accent || '')
+    
+    // Scroll up to the form
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleCancelEditItem = () => {
+    setEditingItemId(null)
+    setNewItemName('')
+    setNewItemCategoryId('')
+    setNewItemPriceUsd('')
+    setNewItemPriceArs('')
+    setNewItemDiscountUsd('')
+    setNewItemDiscountArs('')
+    setNewItemImage('')
+    setNewItemImage2('')
+    setNewItemImage3('')
+    setNewItemVideoUrl('')
+    setNewItemHighlight('')
+    setNewItemAccent('')
+    setItemError('')
+  }
+
   const handleCreateItem = async (event) => {
     event.preventDefault()
     if (
@@ -102,48 +143,68 @@ function AdminPage({
       !newItemCategoryId ||
       !newItemPriceUsd ||
       !newItemPriceArs ||
-      !newItemImage ||
+      (!editingItemId && !newItemImage) || // Only require image for new items
       !newItemVideoUrl ||
       !newItemHighlight ||
       !newItemAccent
-    )
+    ) {
+      setItemError('Faltan campos requeridos.')
       return
+    }
     setItemError('')
+
+    const hasDiscountUsd = String(newItemDiscountUsd).trim() !== ''
+    const hasDiscountArs = String(newItemDiscountArs).trim() !== ''
+
+    if ((hasDiscountUsd && !hasDiscountArs) || (!hasDiscountUsd && hasDiscountArs)) {
+      setItemError('Ambos precios de descuento deben estar completados o ambos deben estar vacíos.')
+      return
+    }
 
     const numericUsd = Number(newItemPriceUsd)
     const numericArs = Number(newItemPriceArs)
     if (Number.isNaN(numericUsd) || numericUsd <= 0) return
     if (Number.isNaN(numericArs) || numericArs <= 0) return
 
-    const idBase = newItemName.toLowerCase().replace(/\s+/g, '-')
-    const uniqueSuffix = String(Date.now()).slice(-4)
-    const newId = `${idBase}-${uniqueSuffix}`
-
     try {
-      await onAddItem({
-        id: newId,
-        name: newItemName.trim(),
-        categoryId: newItemCategoryId,
-        priceUsd: numericUsd,
-        priceArs: numericArs,
-        image: newItemImage.trim(),
-        image2: newItemImage2.trim(),
-        image3: newItemImage3.trim(),
-        videoUrl: newItemVideoUrl.trim(),
-        highlight: newItemHighlight.trim(),
-        accent: newItemAccent.trim(),
-      })
+      if (editingItemId) {
+        await onUpdateItem(editingItemId, {
+          name: newItemName.trim(),
+          categoryId: newItemCategoryId,
+          priceUsd: numericUsd,
+          priceArs: numericArs,
+          discountUsd: hasDiscountUsd ? Number(newItemDiscountUsd) : null,
+          discountArs: hasDiscountArs ? Number(newItemDiscountArs) : null,
+          videoUrl: newItemVideoUrl.trim(),
+          highlight: newItemHighlight.trim(),
+          accent: newItemAccent.trim(),
+        })
+        handleCancelEditItem() // Clear form after edit
+      } else {
+        const idBase = newItemName.toLowerCase().replace(/\s+/g, '-')
+        const uniqueSuffix = String(Date.now()).slice(-4)
+        const newId = `${idBase}-${uniqueSuffix}`
 
-      setNewItemName('')
-      setNewItemCategoryId('')
-      setNewItemPriceUsd('')
-      setNewItemPriceArs('')
-      setNewItemImage('')
-      setNewItemVideoUrl('')
-      setNewItemHighlight('')
-      setNewItemAccent('')
+        await onAddItem({
+          id: newId,
+          name: newItemName.trim(),
+          categoryId: newItemCategoryId,
+          priceUsd: numericUsd,
+          priceArs: numericArs,
+          discountUsd: hasDiscountUsd ? Number(newItemDiscountUsd) : null,
+          discountArs: hasDiscountArs ? Number(newItemDiscountArs) : null,
+          image: newItemImage.trim(),
+          image2: newItemImage2.trim(),
+          image3: newItemImage3.trim(),
+          videoUrl: newItemVideoUrl.trim(),
+          highlight: newItemHighlight.trim(),
+          accent: newItemAccent.trim(),
+        })
+
+        handleCancelEditItem() // Clear form after create
+      }
     } catch (error) {
-      setItemError(error?.message || 'No se pudo crear la plantilla.')
+      setItemError(error?.message || (editingItemId ? 'No se pudo actualizar la plantilla.' : 'No se pudo crear la plantilla.'))
     }
   }
 
@@ -333,14 +394,15 @@ function AdminPage({
           <Card>
             <CardContent sx={{ pb: 1.5 }}>
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                Crear plantilla
+                {editingItemId ? 'Editar plantilla' : 'Crear nueva plantilla'}
               </Typography>
               <Typography
                 variant="body2"
                 sx={{ mb: 2, color: 'text.secondary' }}
               >
-                Añade una nueva hoja al catálogo. Por ahora, todos los campos
-                del formulario son obligatorios.
+                {editingItemId
+                  ? 'Modifica los valores de la plantilla seleccionada. (Las imágenes no se pueden cambiar por el momento)'
+                  : 'Añade una nueva hoja al catálogo. Por ahora, todos los campos del formulario son obligatorios.'}
               </Typography>
               <Box component="form" onSubmit={handleCreateItem}>
                 <Stack spacing={2.5}>
@@ -393,24 +455,52 @@ function AdminPage({
                       ),
                     }}
                   />
-                  <ImageField
-                    label="imagen 1"
-                    folder="plantillas-portadas" // La carpeta que se creará en tu Storage
-                    value={newItemImage}
-                    onChange={(url) => setNewItemImage(url)}
+                  <TextField
+                    label="Precio con descuento (USD) - Opcional"
+                    type="number"
+                    value={newItemDiscountUsd}
+                    onChange={(event) => setNewItemDiscountUsd(event.target.value)}
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">US$</InputAdornment>
+                      ),
+                    }}
                   />
-                  <ImageField
-                    label="imagen 2"
-                    folder="plantillas-portadas" // La carpeta que se creará en tu Storage
-                    value={newItemImage2}
-                    onChange={(url) => setNewItemImage2(url)}
+                  <TextField
+                    label="Precio con descuento (ARS) - Opcional"
+                    type="number"
+                    value={newItemDiscountArs}
+                    onChange={(event) => setNewItemDiscountArs(event.target.value)}
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">$</InputAdornment>
+                      ),
+                    }}
                   />
-                  <ImageField
-                    label="imagen 3"
-                    folder="plantillas-portadas" // La carpeta que se creará en tu Storage
-                    value={newItemImage3}
-                    onChange={(url) => setNewItemImage3(url)}
-                  />
+                  {!editingItemId && (
+                    <>
+                      <ImageField
+                        label="imagen 1"
+                        folder="plantillas-portadas" // La carpeta que se creará en tu Storage
+                        value={newItemImage}
+                        onChange={(url) => setNewItemImage(url)}
+                      />
+                      <ImageField
+                        label="imagen 2"
+                        folder="plantillas-portadas" // La carpeta que se creará en tu Storage
+                        value={newItemImage2}
+                        onChange={(url) => setNewItemImage2(url)}
+                      />
+                      <ImageField
+                        label="imagen 3"
+                        folder="plantillas-portadas" // La carpeta que se creará en tu Storage
+                        value={newItemImage3}
+                        onChange={(url) => setNewItemImage3(url)}
+                      />
+                    </>
+                  )}
                   <TextField
                     label="URL del video (YouTube embed)"
                     value={newItemVideoUrl}
@@ -444,14 +534,25 @@ function AdminPage({
                       {itemError}
                     </Typography>
                   )}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    disableElevation
-                    startIcon={<AddIcon />}
-                  >
-                    Añadir plantilla
-                  </Button>
+                  <Stack direction="row" spacing={2}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disableElevation
+                      startIcon={editingItemId ? <EditIcon /> : <AddIcon />}
+                      sx={{ flexGrow: 1 }}
+                    >
+                      {editingItemId ? 'Guardar cambios' : 'Añadir plantilla'}
+                    </Button>
+                    {editingItemId && (
+                      <Button
+                        variant="outlined"
+                        onClick={handleCancelEditItem}
+                      >
+                        Cancelar
+                      </Button>
+                    )}
+                  </Stack>
                 </Stack>
               </Box>
             </CardContent>
@@ -614,13 +715,22 @@ function AdminPage({
                           {Number(item.priceArs).toFixed(0)}
                         </Typography>
                       </Box>
-                      <IconButton
-                        color="error"
-                        onClick={() => void onDeleteItem(item.id)}
-                        size="small"
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
+                      <Stack direction="row" spacing={0.5}>
+                        <IconButton
+                          color="primary"
+                          onClick={() => handleEditItemClick(item)}
+                          size="small"
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          color="error"
+                          onClick={() => void onDeleteItem(item.id)}
+                          size="small"
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Stack>
                     </Stack>
                   )
                 })}

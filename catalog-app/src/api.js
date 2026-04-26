@@ -47,3 +47,10 @@ export async function deleteItem(id) {
   })
 }
 
+export async function updateItem(id, item) {
+  return await requestJson(`/api/items/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    body: JSON.stringify(item),
+  })
+}
+
