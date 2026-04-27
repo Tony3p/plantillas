@@ -94,9 +94,10 @@ function App() {
     <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF' }}>
       <AppBar
         position="sticky"
-        elevation={0}
-        color="transparent"
+        elevation={0}   
+        color="white"
         sx={{
+          color: "white",
           borderBottom: '1px solid',
           borderColor: 'divider',
           backdropFilter: 'blur(18px)',
@@ -114,14 +115,22 @@ function App() {
             sx={{ textDecoration: 'none', color: 'inherit', flexGrow: 1 }}
           >
             <Avatar
+              src= "./LOGO_-_TPP_-_SIN_CIRCULO_-_SOLO_SIGLAS.svg"
+              alt= "Logo"
               sx={{
                 width: 40,
                 height: 40,
-                bgcolor: 'secondary.main',
-                boxShadow: '0 0 0 2px rgba(15,23,42,0.3)',
+                borderRadius: 0,
+                
+
+              }}
+              imgProps={{
+                style: {
+                  objectFit: 'contain', 
+                }
               }}
             >
-              <ShoppingBagIcon fontSize="small" />
+              <ShoppingBagIcon fontSize="small"  alt="Logo" />
             </Avatar>
             <Box>
               <Typography

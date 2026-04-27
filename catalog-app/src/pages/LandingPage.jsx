@@ -87,14 +87,50 @@ function LandingPage({ categories, items }) {
 
   return (
     <Box>
-      <Grid
-        container
-        spacing={{ xs: 3, md: 5 }}
-        alignItems="center"
+      {/* ── Hero section ── */}
+      <Box
         sx={{
+          position: 'relative',
+          left: '50%',
+          // '@media (min-width: 1300px)': {
+          //   paddingLeft:"100px",
+          //   paddingRight:"100px",
+          // },
+          transform: 'translateX(-50%)',
+          width: '100vw',
+          position: 'relative',
           mb: { xs: 5, md: 8 },
+          overflow: 'hidden',
+          backgroundImage: 'url(/download.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
+        {/* White frosted overlay — keeps text readable */}
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            bgcolor: 'rgba(255, 255, 255, 0.82)',
+            backdropFilter: 'blur(2px)',
+            
+          }}
+        />
+
+        {/* Content sits above the overlay */}
+        <Box sx={{ position: 'relative', 
+    zIndex: 1,
+    maxWidth: '1200px', // Le ponés un tope al ancho (ajustalo si usás otra medida estándar)
+    mx: 'auto',}}>
+        <Grid
+          container
+          spacing={{ xs: 3, md: 5 }}
+          alignItems="center"
+          sx={{
+            py: { xs: 4, md: 6 },
+            px: { xs: 2, md: 4 },
+          }}
+        >
         <Grid
           item
           xs={12}
@@ -154,7 +190,7 @@ function LandingPage({ categories, items }) {
             >
               Tu sistema en una hoja:
               <br />
-              <Box component="span" sx={{ color: '#2196F3',marginLeft:"15px" }}>
+              <Box component="span" sx={{ color: '#000080',marginLeft:"15px" }}>
                 Tu plantilla perfecta
               </Box>
             </Typography>
@@ -229,6 +265,8 @@ function LandingPage({ categories, items }) {
           </Stack>
         </Grid>
       </Grid>
+        </Box>{/* /content zIndex wrapper */}
+      </Box>{/* /hero background Box */}
 
       <Box id="catalog-section" sx={{ mb: 6 }}>
         <Box sx={{ mb: 3 }}>
@@ -368,8 +406,7 @@ function LandingPage({ categories, items }) {
           variant="body2"
           sx={{ color: 'text.secondary', mb: 2, maxWidth: 520 }}
         >
-          Algunas dudas típicas antes de elegir tu plantilla perfecta. Más
-          adelante podrás ajustar estas preguntas y respuestas a tu proyecto.
+          Algunas dudas típicas antes de elegir tu plantilla perfecta.
         </Typography>
 
         <Stack spacing={1.2}>
@@ -490,7 +527,7 @@ function LandingPage({ categories, items }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="outlined"
-                color="primary"
+                color="green"
                 startIcon={<WhatsAppIcon />}
                 sx={{ flex: 1 }}
               >

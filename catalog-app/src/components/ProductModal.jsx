@@ -29,7 +29,7 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
     <Box
       sx={{
         p: 1.5,
-        borderRadius: 2.5,
+        borderRadius: 1.5,
         bgcolor: hasDiscount ? 'rgba(16,185,129,0.08)' : 'rgba(16,185,129,0.05)',
         border: hasDiscount
           ? '1px solid rgba(16,185,129,0.4)'
