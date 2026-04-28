@@ -45,6 +45,7 @@ function AdminPage({
   const [newCategoryId, setNewCategoryId] = useState('')
   const [newCategoryDescription, setNewCategoryDescription] = useState('')
   const [categoryError, setCategoryError] = useState('')
+  const [color, setColor] = useState('')
 
   const [newItemName, setNewItemName] = useState('')
   const [newItemCategoryId, setNewItemCategoryId] = useState('')
@@ -89,12 +90,13 @@ function AdminPage({
         id: newCategoryId.trim(),
         name: newCategoryName.trim(),
         description: newCategoryDescription.trim(),
-        color: '#eff6ff',
+        color: color.trim(),
       })
 
       setNewCategoryId('')
       setNewCategoryName('')
       setNewCategoryDescription('')
+      setColor('')
     } catch (error) {
       setCategoryError(error?.message || 'No se pudo crear la categoría.')
     }
@@ -358,6 +360,13 @@ function AdminPage({
                     label="Nombre visible"
                     value={newCategoryName}
                     onChange={(event) => setNewCategoryName(event.target.value)}
+                    fullWidth
+                    required
+                  />
+                  <TextField
+                    label="Color (HEX)"
+                    value={color}
+                    onChange={(event) => setColor(event.target.value)}
                     fullWidth
                     required
                   />
