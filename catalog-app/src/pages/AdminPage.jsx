@@ -22,8 +22,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import LockIcon from '@mui/icons-material/Lock'
 import AddIcon from '@mui/icons-material/Add'
 
-const ADMIN_USER = 'admin'
-const ADMIN_PASSWORD = 'admin123'
+const ADMIN_USER = import.meta.env.VITE_ADMIN_USER
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD
 
 function AdminPage({
   categories,
@@ -301,7 +301,6 @@ function AdminPage({
                         </InputAdornment>
                       ),
                     }}
-                    helperText="Demo: admin / admin123"
                   />
                   {loginError && (
                     <Typography

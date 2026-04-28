@@ -11,7 +11,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
-import { storage } from '../firebase/config'; 
+import { storage } from '../firebase/config.js'; 
 
 export default function ImageField({ 
   value, 

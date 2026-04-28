@@ -188,7 +188,7 @@ function App() {
             }
           />
           <Route
-            path="/admin"
+            path="/admin-elefante-verde-locomotora-azulejo"
             element={
               <AdminPage
                 categories={categories}
