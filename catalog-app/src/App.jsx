@@ -115,7 +115,7 @@ function App() {
             sx={{ textDecoration: 'none', color: 'inherit', flexGrow: 1 }}
           >
             <Avatar
-              src= "./LOGO_-_TPP_-_SIN_CIRCULO_-_SOLO_SIGLAS.svg"
+              src= "../LOGO.svg"
               alt= "Logo"
               sx={{
                 width: 40,
