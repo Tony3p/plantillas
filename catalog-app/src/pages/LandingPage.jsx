@@ -98,7 +98,6 @@ function LandingPage({ categories, items }) {
           // },
           transform: 'translateX(-50%)',
           width: '100vw',
-          position: 'relative',
           mb: { xs: 5, md: 8 },
           overflow: 'hidden',
           backgroundImage: 'url(/download.png)',

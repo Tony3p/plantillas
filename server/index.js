@@ -13,12 +13,7 @@ const DIST_PATH = path.join(__dirname, '..', 'catalog-app', 'dist')
 
 
 
-async function writeDb(nextDb) {
-  const tmpPath = `${DB_PATH}.tmp`
-  const json = `${JSON.stringify(nextDb, null, 2)}\n`
-  await fs.writeFile(tmpPath, json, 'utf-8')
-  await fs.rename(tmpPath, DB_PATH)
-}
+
 
 function badRequest(res, message) {
   return res.status(400).json({ error: message })
