@@ -26,8 +26,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import CloseIcon from '@mui/icons-material/Close'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
+import YoutubeIcon from '@mui/icons-material/Youtube'
 import ProductModal from '../components/ProductModal'
 import ProductCard from '../components/ProductCard'
+import PreguntaFrecuente from '../components/PreguntaFrecuente';
+import PreguntasFrecuentes from '../utils/preguntasFrecuentes.json'
 
 function LandingPage({ categories, items }) {
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -79,10 +82,10 @@ function LandingPage({ categories, items }) {
     if (!openItem) return
     const text = encodeURIComponent(
       `Hola! Me interesa la plantilla "${openItem.name}" que vi en tuplantillaperfecta. Precio: ${formatUsd.format(
-        openItem.priceUsd
-      )} USD / ${formatArs.format(openItem.priceArs)} ARS.`
+        openItem.discountUsd || openItem.priceUsd
+      )} USD / ${formatArs.format(openItem.discountArs || openItem.priceArs)} ARS.`
     )
-    window.open(`https://wa.me/5491164799746?text=${text}`, '_blank')
+    window.open(`https://wa.me/5491176236747?text=${text}`, '_blank')
   }
 
   return (
@@ -112,158 +115,160 @@ function LandingPage({ categories, items }) {
             inset: 0,
             bgcolor: 'rgba(255, 255, 255, 0.82)',
             backdropFilter: 'blur(2px)',
-            
+
           }}
         />
 
         {/* Content sits above the overlay */}
-        <Box sx={{ position: 'relative', 
-    zIndex: 1,
-    maxWidth: '1200px', // Le ponés un tope al ancho (ajustalo si usás otra medida estándar)
-    mx: 'auto',}}>
-        <Grid
-          container
-          spacing={{ xs: 3, md: 5 }}
-          alignItems="center"
-          sx={{
-            py: { xs: 4, md: 6 },
-            px: { xs: 2, md: 4 },
-          }}
-        >
-        <Grid
-          item
-          xs={12}
-          md={12}
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Stack 
-            spacing={2.5} 
-            sx={{ 
-              display: 'flex', 
-              alignItems: { xs: 'center', sm: 'flex-start' }, 
-              textAlign: { xs: 'center', sm: 'left' } 
+        <Box sx={{
+          position: 'relative',
+          zIndex: 1,
+          maxWidth: '1200px', // Le ponés un tope al ancho (ajustalo si usás otra medida estándar)
+          mx: 'auto',
+        }}>
+          <Grid
+            container
+            spacing={{ xs: 3, md: 5 }}
+            alignItems="center"
+            sx={{
+              py: { xs: 4, md: 6 },
+              px: { xs: 2, md: 4 },
             }}
           >
-
-            <Chip
-              label="Plantillas de hojas de cálculo"
-              color="secondary"
-              variant="filled"
+            <Grid
+              item
+              xs={12}
+              md={12}
               sx={{
-                backgroundColor:"#FFC107",
-                alignSelf: { xs: 'center', sm: 'flex-start' },
-                fontWeight: 600,
-                boxShadow: '0 10px 30px rgba(248, 113, 113, 0.25)',
-              }}
-            />
-            <Typography
-              component="h1"
-              sx={{
-                fontSize: { xs: 30, md: 40 },
-                fontWeight: 800,
-                letterSpacing: -0.5,
-                display:"flex",
-
-                '@media (max-width: 1024px)': {
-                  fontSize: { xs: 23, md: 30 },
-
-                },
-                
-
-                '@media (max-width: 612px)': {
-                  display: 'flex',
-                  flexDirection:'column',
-                  fontSize: { xs: 23, md: 24 },
-
-                },
-                '@media (max-width: 400px)': {
-
-                  fontSize: { xs: 21, md: 24 },
-
-                },
-               
+                display: 'flex',
+                justifyContent: 'center',
               }}
             >
-              Tu sistema en una hoja:
-              <br />
-              <Box component="span" sx={{ color: '#000080',marginLeft:"15px" }}>
-                Tu plantilla perfecta
-              </Box>
-            </Typography>
-
-            <Typography
-              variant="body1"
-              sx={{
-                color: 'text.secondary',
-                fontSize: { xs: 14, md: 16 },
-              }}
-            >
-              Explora plantillas listas para usar para tus finanzas, gastos
-              personales y planificación. Sólo duplica, personaliza y empieza a
-              ahorrar tiempo.
-            </Typography>
-
-            {/* Mobile-only "Ver catálogo" CTA */}
-            <Button
-              variant="contained"
-              disableElevation
-              onClick={() => {
-                const el = document.getElementById('catalog-section')
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-              }}
-              sx={{
-                display: { xs: 'inline-flex', sm: 'none' },
-                alignSelf: 'center',
-                px: 4,
-                py: 1.4,
-                borderRadius: 999,
-                fontWeight: 700,
-                fontSize: 15,
-                background: 'linear-gradient(to right, #2E7D32, #1B5E20)',
-                color: 'white',
-                boxShadow: '0 8px 20px rgba(27,94,32,0.25)',
-                '&:hover': {
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 12px 24px rgba(27,94,32,0.35)',
-                },
-                transition: 'all 0.2s',
-              }}
-            >
-              Ver catálogo
-            </Button>
-
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Box
+              <Stack
+                spacing={2.5}
                 sx={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  p: 1,
-                  pr: 2,
-                  borderRadius: 999,
-                  bgcolor: 'rgba(15,23,42,0.04)',
+                  display: 'flex',
+                  alignItems: { xs: 'center', sm: 'flex-start' },
+                  textAlign: { xs: 'center', sm: 'left' }
                 }}
               >
-                <Box
+
+                <Chip
+                  label="Plantillas de hojas de cálculo"
+                  color="secondary"
+                  variant="filled"
                   sx={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: '50%',
-                    background:
-                      'radial-gradient(circle at 30% 30%, #f97316, #4f46e5)',
+                    backgroundColor: "#FFC107",
+                    alignSelf: { xs: 'center', sm: 'flex-start' },
+                    fontWeight: 600,
+                    boxShadow: '0 10px 30px rgba(248, 113, 113, 0.25)',
                   }}
                 />
-                <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                  Diseñadas para verse increíbles en cualquier dispositivo
+                <Typography
+                  component="h1"
+                  sx={{
+                    fontSize: { xs: 30, md: 40 },
+                    fontWeight: 800,
+                    letterSpacing: -0.5,
+                    display: "flex",
+
+                    '@media (max-width: 1024px)': {
+                      fontSize: { xs: 23, md: 30 },
+
+                    },
+
+
+                    '@media (max-width: 612px)': {
+                      display: 'flex',
+                      flexDirection: 'column',
+                      fontSize: { xs: 23, md: 24 },
+
+                    },
+                    '@media (max-width: 400px)': {
+
+                      fontSize: { xs: 21, md: 24 },
+
+                    },
+
+                  }}
+                >
+                  Tu sistema en una hoja:
+                  <br />
+                  <Box component="span" sx={{ color: '#000080', marginLeft: "15px" }}>
+                    Tu plantilla perfecta
+                  </Box>
                 </Typography>
-              </Box>
-            </Stack>
-          </Stack>
-        </Grid>
-      </Grid>
+
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: 'text.secondary',
+                    fontSize: { xs: 14, md: 16 },
+                  }}
+                >
+                  Explora plantillas listas para usar para tus finanzas, gastos
+                  personales y planificación. Sólo duplica, personaliza y empieza a
+                  ahorrar tiempo.
+                </Typography>
+
+                {/* Mobile-only "Ver catálogo" CTA */}
+                <Button
+                  variant="contained"
+                  disableElevation
+                  onClick={() => {
+                    const el = document.getElementById('catalog-section')
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }}
+                  sx={{
+                    display: { xs: 'inline-flex', sm: 'none' },
+                    alignSelf: 'center',
+                    px: 4,
+                    py: 1.4,
+                    borderRadius: 999,
+                    fontWeight: 700,
+                    fontSize: 15,
+                    background: 'linear-gradient(to right, #2E7D32, #1B5E20)',
+                    color: 'white',
+                    boxShadow: '0 8px 20px rgba(27,94,32,0.25)',
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 12px 24px rgba(27,94,32,0.35)',
+                    },
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  Ver catálogo
+                </Button>
+
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      p: 1,
+                      pr: 2,
+                      borderRadius: 999,
+                      bgcolor: 'rgba(15,23,42,0.04)',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: '50%',
+                        background:
+                          'radial-gradient(circle at 30% 30%, #f97316, #4f46e5)',
+                      }}
+                    />
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      Diseñadas para verse increíbles en cualquier dispositivo
+                    </Typography>
+                  </Box>
+                </Stack>
+              </Stack>
+            </Grid>
+          </Grid>
         </Box>{/* /content zIndex wrapper */}
       </Box>{/* /hero background Box */}
 
@@ -308,9 +313,8 @@ function LandingPage({ categories, items }) {
               {categories.map((category) => (
                 <Chip
                   key={category.id}
-                  label={`${category.name} ${
-                    category.itemCount ? `(${category.itemCount})` : ''
-                  }`}
+                  label={`${category.name} ${category.itemCount ? `(${category.itemCount})` : ''
+                    }`}
                   clickable
                   onClick={() => setSelectedCategory(category.id)}
                   color={
@@ -350,12 +354,12 @@ function LandingPage({ categories, items }) {
           )}
         </Box>
 
-        <Box 
-          sx={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 360px))', 
-            justifyContent: 'center', 
-            gap: 3 
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 360px))',
+            justifyContent: 'center',
+            gap: 3
           }}
         >
           {filteredItems.map((item) => (
@@ -409,62 +413,13 @@ function LandingPage({ categories, items }) {
         </Typography>
 
         <Stack spacing={1.2}>
-          <Accordion disableGutters>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="faq-panel-1-content"
-              id="faq-panel-1-header"
-            >
-              <Typography variant="subtitle2">
-                ¿En qué programas puedo usar las plantillas?
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Están pensadas para funcionar sin problemas en Google Sheets y
-                en Excel. También suelen abrirse bien en otros programas
-                compatibles con archivos de hoja de cálculo.
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-
-          <Accordion disableGutters>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="faq-panel-2-content"
-              id="faq-panel-2-header"
-            >
-              <Typography variant="subtitle2">
-                ¿Puedo editar las fórmulas y los estilos?
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Sí. Una vez que hagas tu copia tendrás control total sobre
-                colores, textos, fórmulas y estructura. Nuestra idea es que la
-                plantilla sea un punto de partida sólido, no una jaula.
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-
-          <Accordion disableGutters>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="faq-panel-3-content"
-              id="faq-panel-3-header"
-            >
-              <Typography variant="subtitle2">
-                ¿Qué pasa después de la compra?
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Recibirás un enlace inmediato para duplicar la plantilla en tu
-                cuenta o descargarla. A partir de ahí, es tuya para siempre:
-                sin renovaciones ni suscripciones ocultas.
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
+            {PreguntasFrecuentes.map((pregunta) => (
+                <PreguntaFrecuente
+                    key={pregunta.pregunta}
+                    pregunta={pregunta.pregunta}
+                    respuesta={pregunta.respuesta}
+                />
+            ))}
         </Stack>
       </Box>
 
@@ -511,39 +466,48 @@ function LandingPage({ categories, items }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="contained"
-                color="secondary"
                 startIcon={<InstagramIcon />}
                 disableElevation
-                sx={{ flex: 1 }}
+                sx={{ flex: 1, backgroundColor: "#E4405F" }}
               >
                 Instagram
               </Button>
               <Button
                 component="a"
-                href={`https://wa.me/5491164799746?text=${encodeURIComponent(
+                href={`https://wa.me/5491176236747?text=${encodeURIComponent(
                   'Hola! Me gustaría saber más sobre tus plantillas de hojas de cálculo.'
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="outlined"
-                color="green"
                 startIcon={<WhatsAppIcon />}
-                sx={{ flex: 1 }}
+                sx={{ flex: 1, color: "white", borderColor: "green", backgroundColor: "green" }}
               >
                 WhatsApp
+              </Button>
+              <Button
+                component="a"
+                href={`https://www.youtube.com/@TuPlantillaPerfecta`}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="outlined"
+                startIcon={<YoutubeIcon />}
+                sx={{ flex: 1, color: "white", borderColor: "red", backgroundColor: "red" }}
+              >
+                YouTube
               </Button>
             </Stack>
           </Grid>
         </Grid>
       </Box>
 
-      <ProductModal 
-        open={Boolean(openItem)} 
-        item={openItem} 
-        onClose={handleCloseItem} 
-        onBuy={handleWhatsAppCompra} 
-        formatUsd={formatUsd} 
-        formatArs={formatArs} 
+      <ProductModal
+        open={Boolean(openItem)}
+        item={openItem}
+        onClose={handleCloseItem}
+        onBuy={handleWhatsAppCompra}
+        formatUsd={formatUsd}
+        formatArs={formatArs}
       />
     </Box>
   )

@@ -1,0 +1,26 @@
+[
+  {
+    "pregunta": "¿Se abona todos los meses?",
+    "respuesta": "No, son de pago único. Una vez que la adquiris, es tuya para siempre!"
+  },
+  {
+    "pregunta": "¿Tengo que tener conocimientos en Excel?",
+    "respuesta": "No, son fáciles de usar y tienen su video tutorial en Youtube"
+  },
+  {
+    "pregunta": "¿Puedo usarlas desde el celular?",
+    "respuesta": "Si, tanto en celular como computadora a través de la aplicación de Excel."
+  },
+  {
+    "pregunta": "¿Y si no tengo Excel?",
+    "respuesta": "Lo podes usar desde Excel Online a través de tu navegador. Es gratuito!"
+  },
+  {
+    "pregunta": "¿Vienen explicados?",
+    "respuesta": "Si, tienen la explicación en nuestro canal de Youtube!"
+  },
+  {
+    "pregunta": "¿Qué pasa si tengo dudas?",
+    "respuesta": "Podes contactarnos y nosotros estamos siempre para ayudarte!"
+  }
+]

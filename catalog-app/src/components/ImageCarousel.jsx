@@ -6,15 +6,17 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 const ImageCarousel = ({ images, altText, objectFit = 'contain' }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const filteredImages = images.filter(img => img !== "");
+
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
+    setCurrentIndex((prev) => (prev + 1) % filteredImages.length);
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    setCurrentIndex((prev) => (prev - 1 + filteredImages.length) % filteredImages.length);
   };
 
-  if (!images || images.length === 0) return null;
+  if (!filteredImages || filteredImages.length === 0) return null;
 
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -30,7 +32,7 @@ const ImageCarousel = ({ images, altText, objectFit = 'contain' }) => {
             bgcolor: '#ffffff',
           }}
         />
-        {images.length > 1 && (
+        {filteredImages.length > 1 && (
           <Box
             sx={{
               position: 'absolute',
@@ -42,7 +44,7 @@ const ImageCarousel = ({ images, altText, objectFit = 'contain' }) => {
               zIndex: 2,
             }}
           >
-            {images.map((_, idx) => (
+            {filteredImages.map((_, idx) => (
               <Box
                 key={idx}
                 sx={{
@@ -59,7 +61,7 @@ const ImageCarousel = ({ images, altText, objectFit = 'contain' }) => {
         )}
       </Box>
 
-      {images.length > 1 && (
+      {filteredImages.length > 1 && (
         <>
           <IconButton
             onClick={handlePrev}

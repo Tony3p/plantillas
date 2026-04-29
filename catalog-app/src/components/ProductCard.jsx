@@ -37,7 +37,7 @@ const ProductCard = ({ item, onClick, formatUsd, formatArs }) => {
           image={item.images?.[0] || item.image}
           alt={item.name}
           sx={{
-            height: 150,
+            height: 190,
             objectFit: 'cover',
             filter: 'saturate(1.05)',
           }}
@@ -163,9 +163,9 @@ const ProductCard = ({ item, onClick, formatUsd, formatArs }) => {
         </Box>
       </Box>
 
-      <CardContent sx={{ flexGrow: 1 }}>
+      <CardContent sx={{ flexGrow: 1.5 }}>
         <Stack spacing={1.2}>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          <Typography variant="body2" sx={{ color: 'black', fontWeight:700 }}>
             {item.highlight}
           </Typography>
           <Typography
@@ -173,33 +173,7 @@ const ProductCard = ({ item, onClick, formatUsd, formatArs }) => {
             sx={{ fontSize: 13, color: 'text.secondary' }}
           >
             {item.accent}
-          </Typography>
-          <Divider sx={{ my: 1 }} />
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography
-              variant="body2"
-              sx={{ color: 'text.secondary', fontSize: 12 }}
-            >
-              Editable en Google Sheets y Excel.
-            </Typography>
-            <Typography
-              variant="caption"
-              sx={{
-                px: 1,
-                py: 0.3,
-                borderRadius: 999,
-                bgcolor: 'rgba(16, 185, 129, 0.08)',
-                color: 'rgb(5, 150, 105)',
-                fontWeight: 600,
-              }}
-            >
-              Sin suscripción
-            </Typography>
-          </Stack>
+          </Typography>          
         </Stack>
       </CardContent>
 
