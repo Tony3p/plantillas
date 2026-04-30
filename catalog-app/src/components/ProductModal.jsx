@@ -15,7 +15,7 @@ import ImageCarousel from './ImageCarousel'
 
 function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const onYotubeClick=()=>{
     window.open(item.videoUrl.replace("embed/", "watch?v="), '_blank')
@@ -322,7 +322,9 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
               overflow: 'hidden',
               boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
               flexShrink: 0,
-              height: "45%"
+              maxHeight: "45%",
+              marginBottom: "2%",
+              marginTop: "2%"
             }}
           >
             <Box sx={{ position: 'relative', width: '100%', pt: '52%' }}>

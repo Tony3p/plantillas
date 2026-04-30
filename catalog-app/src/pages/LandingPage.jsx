@@ -452,9 +452,17 @@ function LandingPage({ categories, items }) {
               </Typography>
             </Stack>
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={5} sx={{ 
+            '@media (max-width: 850px)': {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "230%",                  
+            }
+          }}>
             <Stack
-              direction={{ xs: 'column', sm: 'row' }}
+              direction={{ sm: 'row' }}
               spacing={2}
               justifyContent="flex-end"
             >
@@ -468,7 +476,9 @@ function LandingPage({ categories, items }) {
                 variant="contained"
                 startIcon={<InstagramIcon />}
                 disableElevation
-                sx={{ flex: 1, backgroundColor: "#E4405F" }}
+                sx={{ flex: 1, backgroundColor: "#E4405F", marginBottom: "10px", '@media (max-width: 850px)': {
+                    width: "100%",
+                } }}
               >
                 Instagram
               </Button>
@@ -481,7 +491,7 @@ function LandingPage({ categories, items }) {
                 rel="noopener noreferrer"
                 variant="outlined"
                 startIcon={<WhatsAppIcon />}
-                sx={{ flex: 1, color: "white", borderColor: "green", backgroundColor: "green" }}
+                sx={{ flex: 1, color: "white", borderColor: "green", backgroundColor: "green", marginBottom: "10px" }}
               >
                 WhatsApp
               </Button>
