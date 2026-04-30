@@ -17,6 +17,10 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
+  const onYotubeClick=()=>{
+    window.open(item.videoUrl.replace("embed/", "watch?v="), '_blank')
+  }
+
   if (!item) return null
 
   const dummyVideoUrl = item.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ'
@@ -97,6 +101,7 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
         variant="contained"
         disableElevation
         sx={{
+          maxHeight: '80%',
           flex: 1,
           py: 1.3,
           background: 'linear-gradient(to right, #2E7D32, #1B5E20)',
@@ -114,6 +119,7 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
       <Button
         variant="outlined"
         sx={{
+          maxHeight: '80%',
           flex: 1,
           py: 1.3,
           borderColor: 'rgba(21,101,192,0.5)',
@@ -137,7 +143,12 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
         open={open}
         onClose={onClose}
         fullScreen
-        PaperProps={{ sx: { bgcolor: 'background.paper' } }}
+        
+        PaperProps={{ sx: { bgcolor: 'background.paper',               '&::-webkit-scrollbar': {
+                display: 'none', // Para Chrome, Safari y Opera
+              },
+              '-ms-overflow-style': 'none',
+              'scrollbar-width': 'none', } }}
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           {/* Carousel — top half */}
@@ -168,7 +179,7 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
               display: 'flex',
               flexDirection: 'column',
               gap: 1.5,
-              overflow: 'hidden',
+
             }}
           >
             <Box>
@@ -186,7 +197,24 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
               </Typography>
             </Box>
             <PriceBox />
-            <Box sx={{ mt: 'auto' }}>
+            <Box sx={{ mt: 'auto', display: 'flex', flexDirection: 'column', gap: 1.5}}>
+                    {item.videoUrl && <Button
+                     variant="outlined"
+                     sx={{
+                       maxHeight: '35%',
+                       alignSelf: 'center',
+                       alignContent: 'center',
+                       py: 1.3,
+                       borderColor: 'red',
+                       color: 'white',
+                       fontWeight: 700,
+                       borderRadius: 2,
+                       bgcolor: 'red',
+                       fontSize: { xs: 13, md: 14 },
+                       '&:hover': { borderColor: 'red', bgcolor: 'red' },
+                     }}
+                     onClick={onYotubeClick}
+      >             Ver en youtube </Button>}
               <Buttons />
             </Box>
           </Box>
@@ -209,6 +237,7 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
           boxShadow: '0 25px 50px -12px rgba(16,185,129,0.25)',
           m: 3,
           maxHeight: 'calc(100vh - 48px)',
+          maxWidth: '83%',
         },
       }}
     >
@@ -293,6 +322,7 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
               overflow: 'hidden',
               boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
               flexShrink: 0,
+              height: "45%"
             }}
           >
             <Box sx={{ position: 'relative', width: '100%', pt: '52%' }}>
@@ -300,7 +330,7 @@ function ProductModal({ open, item, onClose, onBuy, formatUsd, formatArs }) {
                 component="iframe"
                 src={dummyVideoUrl}
                 title="Vista previa"
-                sx={{ border: 0, position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+                sx={{ border: 0, position: 'absolute', inset: 0, width: '100%', height: "100%" }}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
               />

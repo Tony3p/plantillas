@@ -153,6 +153,7 @@ const ProductCard = ({ item, onClick, formatUsd, formatArs }) => {
                     color: 'rgba(229,231,235,0.92)',
                     fontWeight: 700,
                     lineHeight: 1.1,
+                    alignSelf: 'center'
                   }}
                 >
                   {`${formatArs.format(item.priceArs)} ARS`}

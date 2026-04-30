@@ -26,7 +26,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import CloseIcon from '@mui/icons-material/Close'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
-import YoutubeIcon from '@mui/icons-material/Youtube'
+import YoutubeIcon from '@mui/icons-material/YouTube'
 import ProductModal from '../components/ProductModal'
 import ProductCard from '../components/ProductCard'
 import PreguntaFrecuente from '../components/PreguntaFrecuente';

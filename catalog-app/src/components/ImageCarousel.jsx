@@ -19,8 +19,8 @@ const ImageCarousel = ({ images, altText, objectFit = 'contain' }) => {
   if (!filteredImages || filteredImages.length === 0) return null;
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
-      <Box sx={{ width: '100%', height: '100%', borderRadius: 3, overflow: 'hidden', boxShadow: '0 10px 30px rgba(16, 185, 129, 0.15), 0 0 0 1px rgba(16, 185, 129, 0.1)' }}>
+    <Box sx={{ position: 'relative', width: '100%', height: '100%', paddingLeft: '15%', backgroundColor: '#FFFFFF' }}>
+      <Box sx={{ width: '90%', height: '95%',  overflow: 'hidden', boxShadow: '0 10px 30px rgba(16, 185, 129, 0.15), 0 0 0 1px rgba(16, 185, 129, 0.1)' }}>
         <CardMedia
           component="img"
           image={images[currentIndex]}
@@ -66,13 +66,13 @@ const ImageCarousel = ({ images, altText, objectFit = 'contain' }) => {
           <IconButton
             onClick={handlePrev}
             sx={{
+              transform: 'translateY(-50%)',
               position: 'absolute',
               top: '50%',
-              left: { xs: 4, md: -48 },
-              transform: 'translateY(-50%)',
-              color: 'text.secondary',
-              bgcolor: 'transparent',
-              '&:hover': { bgcolor: 'rgba(0,0,0,0.04)', color: '#10B981' },
+              left: { xs: 4, md: 24 },
+
+
+
             }}
           >
             <ChevronLeftIcon fontSize="large" />
@@ -82,7 +82,7 @@ const ImageCarousel = ({ images, altText, objectFit = 'contain' }) => {
             sx={{
               position: 'absolute',
               top: '50%',
-              right: { xs: 4, md: -48 },
+              right: { xs: 4, md: -5 },
               transform: 'translateY(-50%)',
               color: 'text.secondary',
               bgcolor: 'transparent',
